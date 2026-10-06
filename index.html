@@ -1,1 +1,176 @@
-<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><style>*{box-sizing:border-box;margin:0}body{background:#000;color:#fff;font-family:sans-serif;height:100vh}.b{width:90%;max-width:340px;height:48px;border:2px solid #FF2B2B;border-radius:12px;background:#000;color:#fff;padding:0 14px;margin:8px 0;outline:none}.c{width:90%;max-width:340px;height:48px;border-radius:28px;border:2px solid #FF2B2B;background:#000;color:#FF2B2B;font-weight:700;margin:8px 0}.d{width:90%;max-width:340px;height:48px;border-radius:28px;background:#FF2B2B;color:#000;font-weight:700;border:none;margin:8px 0}#m{flex:1;overflow:auto;padding:12px;display:flex;flex-direction:column;gap:6px}.me{align-self:flex-end;background:#FF2B2B;color:#000;padding:8px 12px;border-radius:14px;max-width:75%}.th{align-self:flex-start;background:#222;padding:8px 12px;border-radius:14px;max-width:75%}</style><script type="module">import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";import{getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword,onAuthStateChanged,signOut}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";import{getFirestore,doc,setDoc,collection,addDoc,query,orderBy,onSnapshot,serverTimestamp,getDocs}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";const cfg={apiKey:"AIzaSyD74zIkwLsTjv_u_vdYqOy5Kv4pRDzd8hI",authDomain:"barchalor.firebaseapp.com",projectId:"barchalor",storageBucket:"barchalor.firebasestorage.app",messagingSenderId:"404904480968",appId:"1:404904480968:web:f53c8182ee4202dc8795fd"};const app=initializeApp(cfg);const auth=getAuth(app);const db=getFirestore(app);let chatId=null;window.signup=async()=>{let e=email.value.trim().toLowerCase(),p=pass.value;if(!e||!p)return alert('Enter email/pass');try{let c=await createUserWithEmailAndPassword(auth,e,p);await setDoc(doc(db,"users",c.user.uid),{email:e,name:e.split('@')[0],owner:e=='qlitobadys@gmail.com'});alert(e=='qlitobadys@gmail.com'?' Owner created!':'Account created!')}catch(x){alert(x.message)}};window.login=async()=>{try{await signInWithEmailAndPassword(auth,email.value,pass.value)}catch(x){alert(x.message)}};onAuthStateChanged(auth,async u=>{if(u){authDiv.style.display='none';chatsDiv.style.display='flex';let s=await getDocs(collection(db,'users'));list.innerHTML='';s.forEach(d=>{if(d.id==u.uid)return;let v=d.data();let el=document.createElement('div');el.style.cssText='padding:12px;border-bottom:1px solid #222;cursor:pointer';el.innerHTML='<b>'+v.name+'</b> '+(v.owner?' OWNER':'')+'<br><small style=color:#777>'+v.email+'</small>';el.onclick=()=>openChat(d.id,v.name);list.appendChild(el)});if(list.innerHTML=='')list.innerHTML='<div style=padding:40px;text-align:center;color:#555>No users yet</div>'}else{authDiv.style.display='flex';chatsDiv.style.display='none';room.style.display='none'}});window.openChat=(id,name)=>{chatId=[auth.currentUser.uid,id].sort().join('_');room.style.display='flex';chatsDiv.style.display='none';rname.textContent=name;let q=query(collection(db,'chats',chatId,'messages'),orderBy('time'));onSnapshot(q,s=>{m.innerHTML='';s.forEach(x=>{let d=x.data();let dv=document.createElement('div');dv.className=d.sender==auth.currentUser.uid?'me':'th';dv.textContent=d.text;m.appendChild(dv)});m.scrollTop=m.scrollHeight})};window.send=async()=>{let t=msg.value.trim();if(!t||!chatId)return;msg.value='';await addDoc(collection(db,'chats',chatId,'messages'),{text:t,sender:auth.currentUser.uid,time:serverTimestamp()})};window.back=()=>{room.style.display='none';chatsDiv.style.display='flex'};window.logout=()=>{signOut(auth);location.reload()};</script></head><body><div id="authDiv" style="height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center"><div style="font-size:70px;color:#FF2B2B;font-weight:900;border:3px solid #FF2B2B;width:100px;height:100px;border-radius:50%;display:flex;align-items:center;justify-content:center">B</div><div style="color:#FF2B2B;margin:12px 0;font-size:18px">Welcome to Barchalor</div><div style="font-size:10px;color:#555;margin-bottom:10px">From Qlito � Owner: qlitobadys@gmail.com</div><input id="email" class="b" placeholder="email@example.com"><input id="pass" type="password" class="b" placeholder="password"><button class="d" onclick="signup()">Sign up</button><button class="c" onclick="login()">Login</button></div><div id="chatsDiv" style="height:100vh;display:none;flex-direction:column"><div style="padding:14px;border-bottom:1px solid #222;display:flex;justify-content:space-between;align-items:center"><b>Chats <span style="color:#FF2B2B">Barchalor</span></b><span onclick="logout()" style="color:#FF2B2B;cursor:pointer">Logout</span></div><div id="list" style="flex:1;overflow:auto"></div></div><div id="room" style="height:100vh;display:none;flex-direction:column;position:fixed;top:0;left:0;width:100%;background:#000"><div style="padding:12px;border-bottom:1px solid #222;display:flex;gap:10px;align-items:center"><span onclick="back()" style="color:#FF2B2B;font-size:22px;cursor:pointer"></span><b id="rname"></b></div><div id="m"></div><div style="display:flex;gap:8px;padding:10px;border-top:1px solid #222"><input id="msg" placeholder="Type message" style="flex:1;background:#111;border:1px solid #222;border-radius:22px;padding:10px 14px;color:#fff;outline:none" onkeypress="if(event.key==='Enter')send()"><button onclick="send()" style="width:42px;height:42px;border-radius:50%;background:#FF2B2B;border:none;font-weight:900"></button></div></div></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BARCHALOR 2.0 - Find Your House</title>
+<style>
+  :root{--green:#00A651;--bg:#f5f5f5;--card:#fff;--text:#000}
+  body.dark{--bg:#121212;--card:#1e1e1e;--text:#fff}
+  body{margin:0;font-family:sans-serif;background:var(--bg);color:var(--text)}
+ .header{position:sticky;top:0;background:var(--card);padding:12px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 5px rgba(0,0,0,.1);z-index:10}
+ .search-bar{width:95%;margin:10px auto;display:block;padding:12px;border-radius:25px;border:1px solid #ddd}
+ .categories{display:flex;gap:8px;overflow:auto;padding:10px}
+ .cat{padding:6px 14px;border-radius:20px;background:var(--card);border:1px solid var(--green);cursor:pointer;white-space:nowrap}
+ .cat.active{background:var(--green);color:#fff}
+ .house-card{background:var(--card);margin:10px;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+ .house-card img{width:100%;height:200px;object-fit:cover}
+ .padd{padding:12px}
+ .row{display:flex;align-items:center;justify-content:space-between}
+ .online{width:10px;height:10px;background:#00ff00;border-radius:50%;display:inline-block}
+ .chat-box{height:70vh;overflow:auto;padding:10px}
+ .msg{max-width:70%;padding:10px;border-radius:15px;margin:5px 0}
+ .me{background:var(--green);color:#fff;margin-left:auto}
+ .other{background:var(--card);border:1px solid #ddd}
+ .bottom-nav{position:fixed;bottom:0;width:100%;display:flex;justify-content:space-around;background:var(--card);padding:10px 0;border-top:1px solid #ddd}
+ .back-btn{font-size:22px;cursor:pointer;padding:5px 10px}
+  #adminPanel{display:none;background:#ffe; border:2px solid red; padding:15px; margin:10px}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div style="display:flex;align-items:center;gap:10px">
+    <span id="backBtn" class="back-btn" onclick="goBack()" style="display:none">←</span>
+    <h2 style="margin:0;color:var(--green)">BARCHALOR</h2>
+  </div>
+  <div style="display:flex;gap:15px;align-items:center">
+    <span onclick="toggleDark()">🌙</span>
+    <span onclick="showPage('notifications')">🔔<b id="notifCount">0</b></span>
+    <img id="headerPic" src="https://via.placeholder.com/35" style="width:35px;height:35px;border-radius:50%;object-fit:cover" onclick="showPage('profile')">
+  </div>
+</div>
+
+<input id="searchInput" class="search-bar" placeholder="🔍 Search houses, people, nickname..." oninput="doSearch()">
+
+<div class="categories" id="catBar">
+  <div class="cat active" onclick="filterCat('All')">All</div>
+  <div class="cat" onclick="filterCat('Self-Contain')">Self-Contain</div>
+  <div class="cat" onclick="filterCat('2-Bedroom')">2-Bedroom</div>
+  <div class="cat" onclick="filterCat('3-Bedroom')">3-Bedroom</div>
+  <div class="cat" onclick="filterCat('Complain Board')" style="background:#ff3b30;color:#fff">📢 Complain Board</div>
+</div>
+
+<!-- FEED -->
+<div id="feed"></div>
+
+<!-- PROFILE SETTINGS -->
+<div id="profilePage" style="display:none;padding:15px">
+  <h3>Profile Settings</h3>
+  <img id="profilePreview" src="https://via.placeholder.com/100" style="width:100px;height:100px;border-radius:50%;object-fit:cover"><br><br>
+  <input type="file" id="picInput" accept="image/*" onchange="uploadPic(event)"><br><br>
+  <input id="nicknameInput" placeholder="Enter unique username/nickname" style="width:100%;padding:12px;border-radius:10px;border:1px solid #ddd"><br><br>
+  <small id="nickError" style="color:red"></small><br>
+  <button onclick="saveProfile()" style="width:100%;padding:12px;background:var(--green);color:#fff;border:none;border-radius:10px">Save Profile</button>
+  <div id="adminPanel">
+    <h3 style="color:red">👑 OWNER ADMIN PANEL</h3>
+    <button onclick="viewAllUsers()">See Everyone Who Joined</button>
+    <button onclick="viewAllChats()">Read All Conversations</button>
+    <div id="adminUsers"></div>
+  </div>
+</div>
+
+<!-- CHAT -->
+<div id="chatPage" style="display:none">
+  <div class="row" style="padding:10px;background:var(--card)">
+    <span><span class="online"></span> <b id="chatWith">User</b> <span id="verifyBadge"></span></span>
+    <span>🟢 Online</span>
+  </div>
+  <div id="chatBox" class="chat-box"></div>
+  <div style="display:flex;padding:10px;gap:5px;background:var(--card)">
+    <input type="file" id="chatImageInput" accept="image/*" style="display:none" onchange="sendChatImage(event)">
+    <button onclick="document.getElementById('chatImageInput').click()">📷</button>
+    <input id="chatInput" placeholder="Type message..." style="flex:1;padding:10px;border-radius:20px;border:1px solid #ddd">
+    <button onclick="sendMsg()" style="background:var(--green);color:#fff;border:none;border-radius:50%;width:40px;height:40px">➤</button>
+  </div>
+</div>
+
+<div class="bottom-nav">
+  <span onclick="showPage('home')">🏠 Home</span>
+  <span onclick="showPage('complain')">📢 Complain</span>
+  <span onclick="showPage('chatList')">💬 Chats</span>
+  <span onclick="showPage('profile')">👤 Profile</span>
+</div>
+
+<script>
+// --- DATA ---
+let houses = JSON.parse(localStorage.getItem('b_houses')||'[]');
+let users = JSON.parse(localStorage.getItem('b_users')||'[{"nickname":"Barchalor_Owner","verified":true,"banned":false}]');
+let currentUser = JSON.parse(localStorage.getItem('b_current')||'null') || {nickname:"Guest", pic:"https://via.placeholder.com/100", verified:false};
+let currentCat = 'All';
+let OWNER_NICK = "Barchalor_Owner"; // change to your nickname to get owner powers
+
+function init(){
+  if(houses.length==0){
+    houses=[{id:1,title:"Self-Contain at Gwarimpa",price:"₦350k",cat:"Self-Contain",img:"https://images.unsplash.com/photo-1560448204-e02f11c3d0e2",likes:5,owner:"Agent Musa",verified:true},{id:2,title:"2-Bedroom at Wuse 2",price:"₦1.2M",cat:"2-Bedroom",img:"https://images.unsplash.com/photo-1570129477492-45c003edd2be",likes:12,owner:"Blessing Homes",verified:false}];
+  }
+  render();
+  document.getElementById('profilePreview').src=currentUser.pic;
+  document.getElementById('headerPic').src=currentUser.pic;
+  document.getElementById('nicknameInput').value=currentUser.nickname||'';
+  if(currentUser.nickname===OWNER_NICK) document.getElementById('adminPanel').style.display='block';
+}
+function render(){
+  let f=document.getElementById('feed'); f.innerHTML='';
+  let filtered=houses.filter(h=> currentCat==='All' || currentCat==='Complain Board'? true : h.cat===currentCat);
+  let q=document.getElementById('searchInput').value.toLowerCase();
+  if(q) filtered=filtered.filter(h=> h.title.toLowerCase().includes(q) || h.owner.toLowerCase().includes(q) || h.cat.toLowerCase().includes(q));
+  filtered.forEach(h=>{
+    f.innerHTML+=`<div class="house-card">
+      <img src="${h.img}">
+      <div class="padd">
+        <div class="row"><b>${h.title}</b> ${h.verified?'✅':''}</div>
+        <div>${h.price} - ${h.cat}</div>
+        <div class="row" style="margin-top:8px">
+          <span onclick="likeHouse(${h.id})">❤️ ${h.likes}</span>
+          <span onclick="openChat('${h.owner}')">💬 Chat</span>
+          <span onclick="shareHouse('${h.title}')">↗️ Share</span>
+          <span onclick="reportHouse(${h.id})">🚩 Report</span>
+        </div>
+        <button onclick="editHouse(${h.id})" style="${currentUser.nickname!==h.owner && currentUser.nickname!==OWNER_NICK?'display:none':''}">Edit/Delete</button>
+      </div>
+    </div>`;
+  });
+}
+function doSearch(){render()}
+function filterCat(c){currentCat=c;document.querySelectorAll('.cat').forEach(e=>e.classList.remove('active')); event.target.classList.add('active'); if(c==='Complain Board') showPage('complain'); else render(); showPage('home');}
+function likeHouse(id){let h=houses.find(x=>x.id==id); h.likes++; localStorage.setItem('b_houses',JSON.stringify(houses)); render(); addNotif(`Someone liked your ${h.title}`)}
+function shareHouse(t){let url=location.href; if(navigator.share) navigator.share({title:t,url}); else window.open(`https://wa.me/?text=${encodeURIComponent(t+" "+url)}`);}
+function reportHouse(id){alert('Reported! Owner will review.');}
+function uploadPic(e){let r=new FileReader(); r.onload=()=>{document.getElementById('profilePreview').src=r.result; currentUser.pic=r.result; document.getElementById('headerPic').src=r.result;}; r.readAsDataURL(e.target.files[0]);}
+function saveProfile(){
+  let nick=document.getElementById('nicknameInput').value.trim();
+  if(!nick) return alert('Enter nickname');
+  if(users.some(u=>u.nickname.toLowerCase()===nick.toLowerCase() && u.nickname!==currentUser.nickname)){document.getElementById('nickError').innerText='❌ This nickname taken! Choose another'; return;}
+  document.getElementById('nickError').innerText='';
+  if(!users.some(u=>u.nickname===nick)) users.push({nickname:nick,verified:false,banned:false});
+  currentUser.nickname=nick;
+  localStorage.setItem('b_current',JSON.stringify(currentUser));
+  localStorage.setItem('b_users',JSON.stringify(users));
+  alert('✅ Profile saved! Nickname is unique!');
+  if(nick===OWNER_NICK) document.getElementById('adminPanel').style.display='block';
+}
+function showPage(p){
+  document.getElementById('feed').style.display=p==='home'?'block':'none';
+  document.getElementById('profilePage').style.display=p==='profile'?'block':'none';
+  document.getElementById('chatPage').style.display=p==='chat' || p==='chatList'?'block':'none';
+  document.getElementById('backBtn').style.display=p!=='home'?'block':'none';
+  if(p==='home') render();
+}
+function goBack(){showPage('home')}
+function openChat(name){document.getElementById('chatWith').innerText=name; showPage('chat'); loadChat(name);}
+let chatStore=JSON.parse(localStorage.getItem('b_chats')||'{}');
+function loadChat(name){let box=document.getElementById('chatBox'); box.innerHTML=''; let msgs=chatStore[name]||[]; msgs.forEach(m=>{ box.innerHTML+=`<div class="msg ${m.me?'me':'other'}">${m.img?`<img src="${m.img}" style="width:100%;border-radius:10px"><br>`:''}${m.text}</div>`});}
+function sendMsg(){let inp=document.getElementById('chatInput'); if(!inp.value) return; let name=document.getElementById('chatWith').innerText; if(!chatStore[name]) chatStore[name]=[]; chatStore[name].push({text:inp.value,me:true}); localStorage.setItem('b_chats',JSON.stringify(chatStore)); inp.value=''; loadChat(name);}
+function sendChatImage(e){let r=new FileReader(); r.onload=()=>{let name=document.getElementById('chatWith').innerText; if(!chatStore[name]) chatStore[name]=[]; chatStore[name].push({text:'📷 Image',img:r.result,me:true}); localStorage.setItem('b_chats',JSON.stringify(chatStore)); loadChat(name);}; r.readAsDataURL(e.target.files[0]);}
+function toggleDark(){document.body.classList.toggle('dark')}
+function addNotif(t){let c=document.getElementById('notifCount'); c.innerText=parseInt(c.innerText)+1;}
+function viewAllUsers(){let d=document.getElementById('adminUsers'); d.innerHTML=users.map(u=>`<div style="display:flex;justify-content:space-between;padding:8px;border-bottom:1px solid #ccc">${u.nickname} ${u.verified?'✅':''} <span><button onclick="banUser('${u.nickname}')">Ban</button> <button onclick="verifyUser('${u.nickname}')">Verify</button></span></div>`).join('');}
+function banUser(n){let u=users.find(x=>x.nickname===n); u.banned=!u.banned; localStorage.setItem('b_users',JSON.stringify(users)); alert(n+(u.banned?' banned':' unbanned')); viewAllUsers();}
+function verifyUser(n){let u=users.find(x=>x.nickname===n); u.verified=!u.verified; localStorage.setItem('b_users',JSON.stringify(users)); alert(n+' verified!'); viewAllUsers();}
+function viewAllChats(){let out=''; for(let k in chatStore){out+=`=== Chat with ${k} ===\n`+chatStore[k].map(m=>m.text).join('\n')+'\n\n';} alert(out||'No chats yet');}
+function editHouse(id){let h=houses.find(x=>x.id==id); let nt=prompt('Edit title',h.title); if(nt===null) return; if(confirm('Delete this house?')){houses=houses.filter(x=>x.id!=id);} else {h.title=nt;} localStorage.setItem('b_houses',JSON.stringify(houses)); render();}
+init();
+</script>
+</body>
+</html>
