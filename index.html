@@ -4,30 +4,25 @@
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Barchalor - Owner Qlito bady s</title>
 <style>
-:root{--fb-red:#e11d48;--fb-bg:#fdf2f2;--fb-card:#fff;--text-main:#1f2937;--text-sub:#4b5563;--owner-gold:#b45309}
+:root{--fb-red:#e11d48;--fb-bg:#fdf2f2;--fb-card:#fff}
 *{box-sizing:border-box;margin:0;padding:0;font-family:system-ui}
 body{background:var(--fb-bg);display:flex;height:100vh;justify-content:center;align-items:center}
-#auth-screen{background:var(--fb-card);padding:35px 30px;border-radius:12px;box-shadow:0 4px 20px rgba(225,29,72,.15);text-align:center;width:380px;border:1px solid rgba(225,29,72,.1)}
-#auth-screen h1{color:var(--fb-red);font-size:2.8rem;margin-bottom:5px;font-weight:900}
-#auth-screen p{color:var(--text-sub);margin-bottom:20px}
-#auth-screen input{width:100%;padding:14px;margin:8px 0;border:1px solid #e5e7eb;border-radius:8px;background:#fff5f5;outline:none}
-#auth-screen button{width:100%;padding:14px;background:var(--fb-red);border:none;color:#fff;font-weight:700;border-radius:8px;cursor:pointer;font-size:1.1rem;margin-top:10px}
-.toggle-link{margin-top:15px;font-size:.9rem;color:var(--fb-red);cursor:pointer;display:block;font-weight:600}
+#auth-screen{background:#fff;padding:30px;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,.1);text-align:center;width:380px}
+#auth-screen h1{color:var(--fb-red);font-size:2.8rem;font-weight:900}
+#auth-screen input{width:100%;padding:14px;margin:8px 0;border:1px solid #ddd;border-radius:8px;background:#fff5f5;outline:none}
+.btn-red{width:100%;padding:14px;background:var(--fb-red);border:none;color:#fff;font-weight:700;border-radius:8px;cursor:pointer;margin-top:10px}
 #app-container{display:none;width:100vw;height:100vh;grid-template-columns:280px 1fr 300px}
-.sidebar{background:var(--fb-card);border-right:1px solid #eee;padding:20px;display:flex;flex-direction:column}
+.sidebar{background:#fff;border-right:1px solid #eee;padding:20px;display:flex;flex-direction:column}
 .chat-area{display:flex;flex-direction:column;background:var(--fb-bg);flex:1}
-.header{background:var(--fb-card);padding:16px;display:flex;justify-content:space-between;font-weight:700;border-bottom:1px solid #eee}
+.header{background:#fff;padding:16px;display:flex;justify-content:space-between;font-weight:700;border-bottom:1px solid #eee}
 .feed{flex:1;padding:20px;overflow-y:auto;display:flex;flex-direction:column;gap:12px}
-.msg{max-width:70%;padding:12px 16px;border-radius:18px;background:var(--fb-card);align-self:flex-start;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+.msg{max-width:70%;padding:12px 16px;border-radius:18px;background:#fff;align-self:flex-start;box-shadow:0 1px 3px rgba(0,0,0,.05)}
 .msg.me{align-self:flex-end;background:var(--fb-red);color:#fff}
 .msg img{width:100%;border-radius:10px;margin-top:8px;max-height:300px;object-fit:cover}
-.meta{font-size:.7rem;opacity:.8;margin-bottom:4px;font-weight:700;display:flex;gap:6px;align-items:center}
-.badge-owner{background:#fef3c7;color:var(--owner-gold);font-size:.6rem;padding:2px 6px;border-radius:4px;border:1px solid #fcd34d;font-weight:800}
-.msg.me.badge-owner{background:#fff;color:var(--fb-red);border:none}
-.input-deck{padding:12px;background:var(--fb-card);display:flex;gap:8px;border-top:1px solid #eee;align-items:center}
-.input-deck input[type=text]{flex:1;padding:12px 16px;border-radius:24px;border:1px solid #e5e7eb;background:#fff5f5;outline:none}
-.online-list{list-style:none;flex:1;overflow-y:auto}
-.online-list li{padding:10px;border-radius:8px;background:#fff5f5;margin-bottom:6px;display:flex;justify-content:space-between;cursor:pointer}
+.meta{font-size:.7rem;opacity:.8;margin-bottom:4px;font-weight:700}
+.badge{font-size:.6rem;padding:2px 6px;border-radius:4px;background:gold;color:#000;font-weight:800}
+.input-deck{padding:12px;background:#fff;display:flex;gap:8px;border-top:1px solid #eee}
+.input-deck input[type=text]{flex:1;padding:12px 16px;border-radius:24px;border:1px solid #eee;background:#fff5f5;outline:none}
 .chat-box{position:fixed;bottom:0;right:20px;width:300px;height:380px;background:#fff;border-radius:12px 12px 0 0;box-shadow:0 -2px 10px rgba(0,0,0,.2);display:none;flex-direction:column;z-index:999}
 .chat-box.active{display:flex}
 </style>
@@ -36,38 +31,37 @@ body{background:var(--fb-bg);display:flex;height:100vh;justify-content:center;al
 
 <div id="auth-screen">
 <h1>barchalor</h1>
-<p>Connect with friends and community.</p>
+<p style="color:#666;margin:8px 0 16px">Connect with friends</p>
 <input id="username-field" placeholder="Email or Username"/>
 <input id="password-field" type="password" placeholder="Password"/>
-<button onclick="handleAuth()" id="auth-btn">Log In</button>
-<span class="toggle-link" onclick="toggleAuthMode()" id="toggle-view">Create new account</span>
-<small style="display:block;margin-top:12px;color:#888">Owner: qlitobadys@gmail.com<br>Default pass: password123</small>
+<button class="btn-red" onclick="handleAuth()" id="auth-btn">Log In</button>
+<span style="margin-top:12px;display:block;color:var(--fb-red);cursor:pointer;font-weight:600" onclick="toggleAuthMode()" id="toggle-view">Create new account</span>
+
+<div style="margin-top:20px;padding-top:16px;border-top:1px solid #eee">
+<small style="color:#888;display:block;margin-bottom:8px">Can't login? Fix it:</small>
+<button onclick="resetOwner()" style="width:100%;padding:10px;background:#000;color:#fff;border:none;border-radius:8px;cursor:pointer">🔧 RESET & Create Owner Account</button>
+<small style="color:#666;display:block;margin-top:6px">Email: qlitobadys@gmail.com<br>Pass: barchalor123</small>
+</div>
 </div>
 
 <div id="app-container">
 <div class="sidebar">
 <h2 style="color:var(--fb-red)">barchalor</h2>
-<h4 style="margin:14px 0 8px;color:var(--text-sub);font-size:.8rem">ACTIVE MEMBERS</h4>
-<ul id="online-users" class="online-list"></ul>
-<button onclick="logout()" style="margin-top:10px;padding:10px;border:none;background:#eee;border-radius:8px;font-weight:700;cursor:pointer">Log Out</button>
+<ul id="online-users" style="list-style:none;margin-top:16px;flex:1"></ul>
+<button onclick="logout()" style="padding:10px;border:none;background:#eee;border-radius:8px;font-weight:700;cursor:pointer">Log Out</button>
 </div>
-
 <div class="chat-area">
 <div class="header"><span>🌍 Global Feed</span><span id="user-display"></span></div>
 <div id="chat-feed" class="feed"></div>
 <div class="input-deck">
 <input type="file" id="imgInput" accept="image/*" hidden onchange="handleImage(event)"/>
 <button onclick="document.getElementById('imgInput').click()" style="background:#fff5f5;border:1px solid #eee;padding:10px 12px;border-radius:20px;cursor:pointer">📸</button>
-<input type="text" id="msg-input" placeholder="What's on your mind? (Add photo too)" onkeypress="if(event.key==='Enter')sendMessage()"/>
+<input type="text" id="msg-input" placeholder="Post with image..." onkeypress="if(event.key==='Enter')sendMessage()"/>
 <button onclick="sendMessage()" style="background:var(--fb-red);color:#fff;border:none;padding:0 20px;border-radius:24px;font-weight:700;cursor:pointer">Post</button>
 </div>
 <div id="imgPreviewWrap" style="display:none;padding:0 12px 10px;background:#fff"><img id="imgPreview" style="width:100%;max-height:150px;object-fit:cover;border-radius:10px"/><small onclick="clearImg()" style="color:red;cursor:pointer"> ✕ remove</small></div>
 </div>
-
-<div style="background:#fff;border-left:1px solid #eee;padding:14px">
-<b>Messenger</b><br><small style="color:#888">Click to chat</small>
-<div id="messengerList" style="margin-top:10px"></div>
-</div>
+<div style="background:#fff;border-left:1px solid #eee;padding:14px"><b>Messenger</b><div id="messengerList" style="margin-top:10px"></div></div>
 </div>
 
 <div id="chatBox" class="chat-box">
@@ -77,15 +71,23 @@ body{background:var(--fb-bg);display:flex;height:100vh;justify-content:center;al
 </div>
 
 <script>
-const OWNER = "qlitobadys@gmail.com";
+const OWNER="qlitobadys@gmail.com";
+const OWNER_PASS="barchalor123";
 let isLoginMode=true;
 let currentUser=localStorage.getItem('barchalor_current_user');
 let DB=JSON.parse(localStorage.getItem('barchalor_local_db'))||{users:{},messages:[]};
 let chats=JSON.parse(localStorage.getItem('b_chats')||'{}');
-let currentChat=null;
-let pendingImg=null;
+let currentChat=null;let pendingImg=null;
 
-if(!DB.users[OWNER.toLowerCase()]){DB.users[OWNER.toLowerCase()]={username:OWNER,password:"password123",role:"owner"};localStorage.setItem('barchalor_local_db',JSON.stringify(DB));}
+function resetOwner(){
+DB={users:{},messages:[]};
+DB.users[OWNER.toLowerCase()]={username:OWNER,password:OWNER_PASS,role:"owner"};
+localStorage.setItem('barchalor_local_db',JSON.stringify(DB));
+localStorage.setItem('barchalor_current_user',OWNER);
+alert("Owner account created!\nEmail: "+OWNER+"\nPass: "+OWNER_PASS+"\n\nNow reloading...");
+location.reload();
+}
+
 if(currentUser)showDashboard();
 
 function toggleAuthMode(){isLoginMode=!isLoginMode;document.getElementById('auth-btn').innerText=isLoginMode?'Log In':'Sign Up';document.getElementById('toggle-view').innerText=isLoginMode?'Create new account':'Already have account?';}
@@ -93,23 +95,22 @@ function handleAuth(){
 const u=document.getElementById('username-field').value.trim();const p=document.getElementById('password-field').value;
 if(!u||!p)return alert("Fill all fields");
 const key=u.toLowerCase();
-if(isLoginMode){if(DB.users[key]&&DB.users[key].password===p){localStorage.setItem('barchalor_current_user',DB.users[key].username);currentUser=DB.users[key].username;showDashboard();}else alert("Wrong email or password");}
-else{if(DB.users[key])alert("Account exists");else{DB.users[key]={username:u,password:p,role:key===OWNER.toLowerCase()?"owner":"member"};localStorage.setItem('barchalor_local_db',JSON.stringify(DB));localStorage.setItem('barchalor_current_user',u);currentUser=u;showDashboard();}}
+if(isLoginMode){if(DB.users[key]&&DB.users[key].password===p){localStorage.setItem('barchalor_current_user',DB.users[key].username);currentUser=DB.users[key].username;showDashboard();}else alert("Wrong password. Tap the BLACK RESET BUTTON below!");}
+else{if(DB.users[key])alert("Exists");else{DB.users[key]={username:u,password:p,role:key===OWNER.toLowerCase()?"owner":"member"};localStorage.setItem('barchalor_local_db',JSON.stringify(DB));localStorage.setItem('barchalor_current_user',u);currentUser=u;showDashboard();}}
 }
 function showDashboard(){
 document.getElementById('auth-screen').style.display='none';
 document.getElementById('app-container').style.display='grid';
 const isOwner=currentUser.toLowerCase()===OWNER.toLowerCase();
-document.getElementById('user-display').innerHTML=`${currentUser} ${isOwner?'<span class="badge-owner">👑 OWNER</span>':''}`;
+document.getElementById('user-display').innerHTML=`${currentUser} ${isOwner?'<span class="badge">👑 OWNER</span>':''}`;
 renderFeed();renderUsers();renderMessenger();
 }
 function handleImage(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>{pendingImg=ev.target.result;document.getElementById('imgPreview').src=pendingImg;document.getElementById('imgPreviewWrap').style.display='block';};r.readAsDataURL(f);}
-function clearImg(){pendingImg=null;document.getElementById('imgPreviewWrap').style.display='none';document.getElementById('imgInput').value='';}
+function clearImg(){pendingImg=null;document.getElementById('imgPreviewWrap').style.display='none';}
 function sendMessage(){
 const txt=document.getElementById('msg-input').value.trim();
 if(!txt&&!pendingImg)return;
-const isOwner=currentUser.toLowerCase()===OWNER.toLowerCase();
-DB.messages.unshift({user:currentUser,text:txt,img:pendingImg,time:new Date().toLocaleTimeString(),isOwner});
+DB.messages.unshift({user:currentUser,text:txt,img:pendingImg,time:new Date().toLocaleTimeString(),isOwner:currentUser.toLowerCase()===OWNER.toLowerCase()});
 localStorage.setItem('barchalor_local_db',JSON.stringify(DB));
 document.getElementById('msg-input').value='';clearImg();renderFeed();
 }
@@ -118,32 +119,18 @@ const feed=document.getElementById('chat-feed');feed.innerHTML='';
 DB.messages.forEach((m,i)=>{
 const me=m.user===currentUser;
 const isOwnerView=currentUser.toLowerCase()===OWNER.toLowerCase();
-feed.innerHTML+=`<div class="msg ${me?'me':''}">
-<div class="meta">${m.user} ${m.isOwner?'<span class="badge-owner">👑 OWNER</span>':''} • ${m.time} ${isOwnerView?`<button onclick="deleteMsg(${i})" style="background:none;border:none;color:${me?'#fff':'red'};font-weight:800;cursor:pointer;margin-left:8px">DELETE</button>`:''}</div>
-<div>${m.text}</div>
-${m.img?`<img src="${m.img}"/>`:''}
-</div>`;
-});
-feed.scrollTop=0;
-}
-function deleteMsg(i){if(confirm("Owner: Delete this post?")){DB.messages.splice(i,1);localStorage.setItem('barchalor_local_db',JSON.stringify(DB));renderFeed();}}
-function renderUsers(){
-const ul=document.getElementById('online-users');ul.innerHTML='';
-Object.values(DB.users).forEach(u=>{
-ul.innerHTML+=`<li><span>${u.username} ${u.role==='owner'? '👑':''}</span><span style="width:8px;height:8px;background:#22c55e;border-radius:50%;display:inline-block"></span></li>`;
+feed.innerHTML+=`<div class="msg ${me?'me':''}"><div class="meta">${m.user} ${m.isOwner?'<span class="badge">👑</span>':''} • ${m.time} ${isOwnerView?`<button onclick="deleteMsg(${i})" style="background:none;border:none;color:${me?'#fff':'red'};font-weight:800;cursor:pointer;margin-left:8px">DELETE</button>`:''}</div><div>${m.text}</div>${m.img?`<img src="${m.img}"/>`:''}</div>`;
 });
 }
-function renderMessenger(){
-const list=document.getElementById('messengerList');list.innerHTML='';
-Object.values(DB.users).forEach(u=>{
-if(u.username!==currentUser){list.innerHTML+=`<div onclick="openChat('${u.username}')" style="padding:8px;background:#fff5f5;border-radius:8px;margin-bottom:6px;cursor:pointer;display:flex;justify-content:space-between"><span>${u.username}</span><span style="color:green;font-size:12px">● online</span></div>`;}
-});
-}
+function deleteMsg(i){DB.messages.splice(i,1);localStorage.setItem('barchalor_local_db',JSON.stringify(DB));renderFeed();}
+function renderUsers(){const ul=document.getElementById('online-users');ul.innerHTML='';Object.values(DB.users).forEach(u=>{ul.innerHTML+=`<li style="padding:10px;background:#fff5f5;border-radius:8px;margin-bottom:6px">${u.username} ${u.role==='owner'?'👑':''}</li>`});}
+function renderMessenger(){const list=document.getElementById('messengerList');list.innerHTML='';Object.values(DB.users).forEach(u=>{if(u.username!==currentUser){list.innerHTML+=`<div onclick="openChat('${u.username}')" style="padding:8px;background:#fff5f5;border-radius:8px;margin-bottom:6px;cursor:pointer">${u.username} <small style="color:green">● online</small></div>`;}});}
 function openChat(name){currentChat=name;document.getElementById('chatName').innerText=name;document.getElementById('chatBox').classList.add('active');if(!chats[name])chats[name]=[{from:'them',text:'Hi! Welcome to Barchalor 👋'}];renderChat();}
 function closeChat(){document.getElementById('chatBox').classList.remove('active');}
 function renderChat(){const box=document.getElementById('chatMsgs');box.innerHTML='';(chats[currentChat]||[]).forEach(m=>{box.innerHTML+=`<div style="padding:8px 12px;border-radius:18px;max-width:75%;${m.from==='me'?'align-self:flex-end;background:#e11d48;color:#fff':'align-self:flex-start;background:#f0f2f5'}">${m.text}</div>`});box.scrollTop=box.scrollHeight;}
-function sendChat(){const inp=document.getElementById('chatInput');if(!inp.value)return;if(!chats[currentChat])chats[currentChat]=[];chats[currentChat].push({from:'me',text:inp.value});inp.value='';localStorage.setItem('b_chats',JSON.stringify(chats));renderChat();setTimeout(()=>{chats[currentChat].push({from:'them',text:'Seen ✓'});localStorage.setItem('b_chats',JSON.stringify(chats));renderChat();},800);}
+function sendChat(){const inp=document.getElementById('chatInput');if(!inp.value)return;if(!chats[currentChat])chats[currentChat]=[];chats[currentChat].push({from:'me',text:inp.value});inp.value='';localStorage.setItem('b_chats',JSON.stringify(chats));renderChat();}
 function logout(){localStorage.removeItem('barchalor_current_user');location.reload();}
+if(DB.messages.length===0&&currentUser){DB.messages=[{user:OWNER,text:"Welcome to Barchalor V4! Tap 📸 to post images + Messenger on right 👑 Owner: Qlito bady s",img:null,time:"Just now",isOwner:true}];localStorage.setItem('barchalor_local_db',JSON.stringify(DB));}
 </script>
 </body>
-</html>
+  </html>
