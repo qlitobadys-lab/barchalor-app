@@ -3,67 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bachelor - Connect & Chat</title>
-    <!-- Puter.js SDK: Handles zero-setup backend authentication and database hosting -->
-    <script src="https://puter.com"></script>
+    <title>Barchalor - Connect & Chat</title>
     <style>
         :root {
-            --fb-blue: #1877f2;
-            --fb-bg: #f0f2f5;
+            --fb-red: #e11d48;
+            --fb-bg: #fdf2f2;
             --fb-card: #ffffff;
-            --text-main: #050505;
-            --text-sub: #65676b;
+            --text-main: #1f2937;
+            --text-sub: #4b5563;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: Segoe UI, Helvetica, Arial, sans-serif; }
         body { background-color: var(--fb-bg); display: flex; height: 100vh; justify-content: center; align-items: center; }
         
-        /* Auth Panel Styles */
-        #auth-screen { background: var(--fb-card); padding: 35px 30px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-align: center; width: 380px; }
-        #auth-screen h1 { color: var(--fb-blue); font-size: 2.8rem; margin-bottom: 5px; letter-spacing: -1px; font-weight: bold; }
-        #auth-screen p { color: var(--text-sub); font-size: 1rem; margin-bottom: 25px; line-height: 1.4; }
-        #auth-screen button { width: 100%; padding: 14px; background: var(--fb-blue); border: none; color: white; font-weight: bold; border-radius: 6px; cursor: pointer; font-size: 1.2rem; margin-top: 5px; transition: background 0.2s; }
-        #auth-screen button:hover { background: #166fe5; }
+        /* Red Themed Authentication Form Card */
+        #auth-screen { background: var(--fb-card); padding: 35px 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(225, 29, 72, 0.15); text-align: center; width: 380px; border: 1px solid rgba(225, 29, 72, 0.1); }
+        #auth-screen h1 { color: var(--fb-red); font-size: 2.8rem; margin-bottom: 5px; letter-spacing: -1px; font-weight: bold; }
+        #auth-screen p { color: var(--text-sub); font-size: 1rem; margin-bottom: 20px; line-height: 1.4; }
+        #auth-screen input { width: 100%; padding: 14px; margin: 8px 0; border: 1px solid #e5e7eb; border-radius: 8px; font-size: 1rem; outline: none; background: #fff5f5; color: var(--text-main); }
+        #auth-screen input:focus { border-color: var(--fb-red); box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.2); }
+        #auth-screen button { width: 100%; padding: 14px; background: var(--fb-red); border: none; color: white; font-weight: bold; border-radius: 8px; cursor: pointer; font-size: 1.2rem; margin-top: 10px; transition: background 0.2s; }
+        #auth-screen button:hover { background: #be123c; }
+        .toggle-link { margin-top: 15px; font-size: 0.9rem; color: var(--fb-red); cursor: pointer; display: block; font-weight: 600; }
         
-        /* Main Layout Grid */
+        /* Dashboard App Interface Layout Grid */
         #app-container { display: none; width: 100vw; height: 100vh; grid-template-columns: 280px 1fr; }
-        .sidebar { background: var(--fb-card); border-right: 1px solid #e4e6eb; padding: 20px; display: flex; flex-direction: column; }
-        .sidebar h2 { color: var(--fb-blue); margin-bottom: 20px; font-size: 1.6rem; letter-spacing: -0.5px; }
+        .sidebar { background: var(--fb-card); border-right: 1px solid #f3f4f6; padding: 20px; display: flex; flex-direction: column; }
+        .sidebar h2 { color: var(--fb-red); margin-bottom: 20px; font-size: 1.8rem; letter-spacing: -0.5px; font-weight: bold; }
         .online-list { list-style: none; overflow-y: auto; flex-grow: 1; }
-        .online-list li { padding: 10px; border-radius: 6px; margin-bottom: 5px; display: flex; align-items: center; font-weight: 600; color: var(--text-main); background: var(--fb-bg); font-size: 0.95rem; }
-        .online-list li::before { content: ''; display: inline-block; width: 9px; height: 9px; background: #31a24c; border-radius: 50%; margin-right: 10px; }
-        .logout-btn { padding: 12px; background: #e4e6eb; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; color: var(--text-main); margin-top: auto; font-size: 0.95rem; }
-        .logout-btn:hover { background: #d8dadf; }
+        .online-list li { padding: 12px; border-radius: 8px; margin-bottom: 6px; display: flex; align-items: center; font-weight: 600; color: var(--text-main); background: #fff5f5; font-size: 0.95rem; }
+        .online-list li::before { content: ''; display: inline-block; width: 9px; height: 9px; background: #22c55e; border-radius: 50%; margin-right: 10px; }
+        .logout-btn { padding: 12px; background: #f3f4f6; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; color: var(--text-sub); margin-top: auto; font-size: 0.95rem; }
+        .logout-btn:hover { background: #e5e7eb; color: var(--text-main); }
 
-        /* Chat Workspace Container */
+        /* Community Workspace Layout */
         .chat-area { display: flex; flex-direction: column; background: var(--fb-bg); }
-        .header { background: var(--fb-card); padding: 18px 20px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); font-weight: bold; font-size: 1.2rem; display: flex; justify-content: space-between; border-bottom: 1px solid #e4e6eb; }
+        .header { background: var(--fb-card); padding: 18px 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); font-weight: bold; font-size: 1.2rem; display: flex; justify-content: space-between; border-bottom: 1px solid #f3f4f6; color: var(--text-main); }
         .feed { flex-grow: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
         
-        /* Message Stream Custom Cards */
-        .msg { max-width: 65%; padding: 12px 16px; border-radius: 18px; background: var(--fb-card); color: var(--text-main); align-self: flex-start; word-wrap: break-word; box-shadow: 0 1px 2px rgba(0,0,0,0.08); }
+        /* Direct Feed Custom Messages */
+        .msg { max-width: 65%; padding: 12px 16px; border-radius: 18px; background: var(--fb-card); color: var(--text-main); align-self: flex-start; word-wrap: break-word; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid rgba(229, 231, 235, 0.5); }
         .msg .meta { font-size: 0.75rem; color: var(--text-sub); margin-bottom: 4px; font-weight: bold; }
-        .msg.me { align-self: flex-end; background: var(--fb-blue); color: white; }
+        .msg.me { align-self: flex-end; background: var(--fb-red); color: white; border: none; box-shadow: 0 2px 8px rgba(225, 29, 72, 0.2); }
         .msg.me .meta { color: rgba(255,255,255,0.85); }
 
-        .input-deck { padding: 15px 20px; background: var(--fb-card); display: flex; gap: 10px; border-top: 1px solid #e4e6eb; }
-        .input-deck input { flex-grow: 1; padding: 14px 20px; border-radius: 24px; border: 1px solid #ccd0d5; background: var(--fb-bg); outline: none; font-size: 0.95rem; }
-        .input-deck button { background: var(--fb-blue); color: white; border: none; padding: 0 24px; border-radius: 24px; font-weight: bold; cursor: pointer; transition: background 0.2s; }
-        .input-deck button:hover { background: #166fe5; }
+        /* Input Controls Dock */
+        .input-deck { padding: 15px 20px; background: var(--fb-card); display: flex; gap: 10px; border-top: 1px solid #f3f4f6; }
+        .input-deck input { flex-grow: 1; padding: 14px 20px; border-radius: 24px; border: 1px solid #e5e7eb; background: #fff5f5; outline: none; font-size: 0.95rem; color: var(--text-main); }
+        .input-deck input:focus { border-color: var(--fb-red); background: #ffffff; }
+        .input-deck button { background: var(--fb-red); color: white; border: none; padding: 0 24px; border-radius: 24px; font-weight: bold; cursor: pointer; transition: background 0.2s; font-size: 0.95rem; }
+        .input-deck button:hover { background: #be123c; }
     </style>
 </head>
 <body>
 
-    <!-- Unified Gateway Portal Interface -->
+    <!-- Redesigned Login Portal UI Grid Screen -->
     <div id="auth-screen">
-        <h1>bachelor</h1>
-        <p>A cloud-hosted online space.<br>Click below to log in securely.</p>
-        <button id="auth-btn" onclick="authenticateUser()">Log In / Sign Up</button>
+        <h1>barchalor</h1>
+        <p>Connect with friends and community.</p>
+        <input type="text" id="username-field" placeholder="Username" autocomplete="off">
+        <input type="password" id="password-field" placeholder="Password">
+        <button id="auth-btn" onclick="handleAuth()">Log In</button>
+        <span class="toggle-link" id="toggle-view" onclick="toggleAuthMode()">Create new account</span>
     </div>
 
-    <!-- Active Global Feed Application Console Layout -->
+    <!-- Main Dashboard Workspace Structure -->
     <div id="app-container">
         <div class="sidebar">
-            <h2>bachelor</h2>
+            <h2>barchalor</h2>
             <h4 style="color: var(--text-sub); margin-bottom: 12px; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px;">Active Members</h4>
             <ul id="online-users" class="online-list"></ul>
             <button class="logout-btn" onclick="logout()">Log Out</button>
@@ -71,7 +77,7 @@
         <div class="chat-area">
             <div class="header">
                 <span>🌍 Global Community Feed</span>
-                <span id="user-display" style="color: var(--text-sub); font-size: 0.95rem; font-weight: normal;"></span>
+                <span id="user-display" style="color: var(--text-sub); font-size: 0.95rem; font-weight: 600;"></span>
             </div>
             <div id="chat-feed" class="feed"></div>
             <div class="input-deck">
@@ -82,38 +88,82 @@
     </div>
 
     <script>
-        let username = "";
+        // Production cloud network pipeline targets
+        const VAULT_URL = "https://jsonbin.io";
+        const SECURITY_KEY = "$2a$10$R6m2W3I68hXbyr68gVnCBO77zepZ.wXg6mE54qX4nZ.bM5m1kE0vC"; 
+        
+        let isLoginMode = true;
+        let currentUser = localStorage.getItem('barchalor_user');
+        let chatData = { users: {}, messages: [] };
 
-        // Verify active token profile identity status on page setup hook
-        if (puter.auth.isSignedIn()) {
-            loadCommunityDashboard();
+        if (currentUser) { showDashboard(); }
+
+        function toggleAuthMode() {
+            isLoginMode = !isLoginMode;
+            document.getElementById('auth-btn').innerText = isLoginMode ? 'Log In' : 'Sign Up';
+            document.getElementById('toggle-view').innerText = isLoginMode ? 'Create new account' : 'Already have an account?';
         }
 
-        async function authenticateUser() {
+        async function fetchServerState() {
             try {
-                // Instantly creates a secure web pop-up screen allowing seamless user sign-up/login
-                await puter.auth.signIn();
-                loadCommunityDashboard();
-            } catch (err) {
-                alert("Authentication encountered an error. Please reload and try again.");
-                console.error(err);
+                const res = await fetch(VAULT_URL, { headers: { "X-Master-Key": SECURITY_KEY } });
+                const json = await res.json();
+                chatData = json.record || { users: {}, messages: [] };
+            } catch (err) { console.error("Sync error:", err); }
+        }
+
+        async function saveServerState() {
+            try {
+                await fetch(VAULT_URL, {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json", "X-Master-Key": SECURITY_KEY },
+                    body: JSON.stringify(chatData)
+                });
+            } catch (err) { console.error("Cloud storage error:", err); }
+        }
+
+        async function handleAuth() {
+            const user = document.getElementById('username-field').value.trim().toLowerCase();
+            const pass = document.getElementById('password-field').value;
+            
+            if (!user || !pass) return alert("Please fill out all fields!");
+            
+            document.getElementById('auth-btn').innerText = "Processing...";
+            await fetchServerState();
+
+            if (isLoginMode) {
+                if (chatData.users[user] && chatData.users[user] === pass) {
+                    executeLogin(user);
+                } else {
+                    alert("Invalid username or password configuration.");
+                    document.getElementById('auth-btn').innerText = "Log In";
+                }
+            } else {
+                if (chatData.users[user]) {
+                    alert("Username already taken inside Barchalor community!");
+                    document.getElementById('auth-btn').innerText = "Sign Up";
+                } else {
+                    chatData.users[user] = pass;
+                    await saveServerState();
+                    alert("Account created successfully! Logging in...");
+                    executeLogin(user);
+                }
             }
         }
 
-        async function loadCommunityDashboard() {
-            const user = await puter.auth.getUser();
-            username = user.username;
+        function executeLogin(user) {
+            localStorage.setItem('barchalor_user', user);
+            currentUser = user;
+            showDashboard();
+        }
 
+        async function showDashboard() {
             document.getElementById('auth-screen').style.display = 'none';
             document.getElementById('app-container').style.display = 'grid';
-            document.getElementById('user-display').innerText = `Hello, ${username}`;
-
-            // Sync user list state tracking structures
-            updateOnlineDirectory();
-            setInterval(updateOnlineDirectory, 10000);
-
-            // Connect real-time continuous message synchronization pipes
-            streamLiveMessages();
+            document.getElementById('user-display').innerText = `@${currentUser}`;
+            
+            syncLoop();
+            setInterval(syncLoop, 3500); // Poll live database state every 3.5 seconds
         }
 
         async function sendMessage() {
@@ -121,63 +171,5 @@
             const text = input.value.trim();
             if (!text) return;
 
-            // Saves data payload cleanly into key-value store architecture array strings
-            await puter.kv.set(`msg_${Date.now()}_${username}`, JSON.stringify({
-                user: username,
-                text: text,
-                timestamp: Date.now()
-            }));
-
-            input.value = '';
-            streamLiveMessages();
-        }
-
-        async function streamLiveMessages() {
-            // Scans public storage records
-            const keys = await puter.kv.list({ prefix: 'msg_' });
-            // Sort keys chronological
-            keys.sort();
-
-            const feed = document.getElementById('chat-feed');
-            feed.innerHTML = ''; 
-
-            for (let key of keys.slice(-40)) { // Render recent historical items count block
-                const rawData = await puter.kv.get(key);
-                if (!rawData) continue;
-                
-                try {
-                    const msg = JSON.parse(rawData);
-                    const msgEl = document.createElement('div');
-                    const timeStr = new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                    
-                    msgEl.className = `msg ${msg.user === username ? 'me' : ''}`;
-                    msgEl.innerHTML = `<div class="meta">${msg.user} • ${timeStr}</div><div>${msg.text}</div>`;
-                    feed.appendChild(msgEl);
-                } catch(e) {}
-            }
-            feed.scrollTop = feed.scrollHeight;
-        }
-
-        async function updateOnlineDirectory() {
-            // Heartbeat register active slot track mapping identity
-            await puter.kv.set(`online_${username}`, Date.now().toString(), { ttl: 30 });
-            
-            const keys = await puter.kv.list({ prefix: 'online_' });
-            const listElement = document.getElementById('online-users');
-            listElement.innerHTML = '';
-
-            for (let key of keys) {
-                const name = key.replace('online_', '');
-                const li = document.createElement('li');
-                li.innerText = name;
-                listElement.appendChild(li);
-            }
-        }
-
-        function logout() {
-            puter.auth.signOut();
-            window.location.reload();
-        }
-    </script>
-</body>
-</html>
+            chatData.messages.push({
+    
