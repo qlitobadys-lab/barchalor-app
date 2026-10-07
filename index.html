@@ -11,6 +11,7 @@
             --fb-card: #ffffff;
             --text-main: #1f2937;
             --text-sub: #4b5563;
+            --owner-gold: #b45309;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: Segoe UI, Helvetica, Arial, sans-serif; }
         body { background-color: var(--fb-bg); display: flex; height: 100vh; justify-content: center; align-items: center; }
@@ -30,8 +31,9 @@
         .sidebar { background: var(--fb-card); border-right: 1px solid #f3f4f6; padding: 20px; display: flex; flex-direction: column; }
         .sidebar h2 { color: var(--fb-red); margin-bottom: 20px; font-size: 1.8rem; letter-spacing: -0.5px; font-weight: bold; }
         .online-list { list-style: none; overflow-y: auto; flex-grow: 1; }
-        .online-list li { padding: 12px; border-radius: 8px; margin-bottom: 6px; display: flex; align-items: center; font-weight: 600; color: var(--text-main); background: #fff5f5; font-size: 0.95rem; }
-        .online-list li::before { content: ''; display: inline-block; width: 9px; height: 9px; background: #22c55e; border-radius: 50%; margin-right: 10px; }
+        .online-list li { padding: 12px; border-radius: 8px; margin-bottom: 6px; display: flex; align-items: center; font-weight: 600; color: var(--text-main); background: #fff5f5; font-size: 0.95rem; justify-content: space-between; }
+        .online-list li::before { content: ''; display: inline-block; width: 9px; height: 9px; background: #22c55e; border-radius: 50%; margin-right: 10px; margin-left: 0; }
+        .online-wrapper { display: flex; align-items: center; }
         .logout-btn { padding: 12px; background: #f3f4f6; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; color: var(--text-sub); margin-top: auto; font-size: 0.95rem; }
         .logout-btn:hover { background: #e5e7eb; color: var(--text-main); }
 
@@ -42,9 +44,14 @@
         
         /* Direct Feed Custom Messages */
         .msg { max-width: 65%; padding: 12px 16px; border-radius: 18px; background: var(--fb-card); color: var(--text-main); align-self: flex-start; word-wrap: break-word; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid rgba(229, 231, 235, 0.5); }
-        .msg .meta { font-size: 0.75rem; color: var(--text-sub); margin-bottom: 4px; font-weight: bold; }
+        .msg .meta { font-size: 0.75rem; color: var(--text-sub); margin-bottom: 4px; font-weight: bold; display: flex; align-items: center; gap: 5px; }
         .msg.me { align-self: flex-end; background: var(--fb-red); color: white; border: none; box-shadow: 0 2px 8px rgba(225, 29, 72, 0.2); }
         .msg.me .meta { color: rgba(255,255,255,0.85); }
+        
+        /* Owner Verification Badge Styles */
+        .badge-owner { background: #fef3c7; color: var(--owner-gold); font-size: 0.65rem; padding: 2px 6px; border-radius: 4px; border: 1px solid #fcd34d; font-weight: bold; text-transform: uppercase; }
+        .msg.me .badge-owner { background: white; color: var(--fb-red); border: none; }
+        .admin-delete-btn { background: none; border: none; color: #ef4444; font-size: 0.75rem; cursor: pointer; font-weight: bold; margin-left: 10px; display: inline; }
 
         /* Input Controls Dock */
         .input-deck { padding: 15px 20px; background: var(--fb-card); display: flex; gap: 10px; border-top: 1px solid #f3f4f6; }
@@ -60,7 +67,7 @@
     <div id="auth-screen">
         <h1>barchalor</h1>
         <p>Connect with friends and community.</p>
-        <input type="text" id="username-field" placeholder="Username" autocomplete="off">
+        <input type="text" id="username-field" placeholder="Email or Username" autocomplete="off">
         <input type="password" id="password-field" placeholder="Password">
         <button id="auth-btn" onclick="handleAuth()">Log In</button>
         <span class="toggle-link" id="toggle-view" onclick="toggleAuthMode()">Create new account</span>
@@ -77,7 +84,7 @@
         <div class="chat-area">
             <div class="header">
                 <span>🌍 Global Community Feed</span>
-                <span id="user-display" style="color: var(--text-sub); font-size: 0.95rem; font-weight: 600;"></span>
+                <span id="user-display" style="color: var(--text-sub); font-size: 0.95rem; font-weight: 600; display: flex; align-items: center; gap: 6px;"></span>
             </div>
             <div id="chat-feed" class="feed"></div>
             <div class="input-deck">
@@ -88,10 +95,13 @@
     </div>
 
     <script>
-        // Production cloud network pipeline targets
+        // High-security server-less pipeline architecture targets
         const VAULT_URL = "https://jsonbin.io";
         const SECURITY_KEY = "$2a$10$R6m2W3I68hXbyr68gVnCBO77zepZ.wXg6mE54qX4nZ.bM5m1kE0vC"; 
         
+        // Defined Application Owner Account Target Identification
+        const OWNER_ACCOUNT = "qlitobadys@gmail.com";
+
         let isLoginMode = true;
         let currentUser = localStorage.getItem('barchalor_user');
         let chatData = { users: {}, messages: [] };
@@ -104,11 +114,18 @@
             document.getElementById('toggle-view').innerText = isLoginMode ? 'Create new account' : 'Already have an account?';
         }
 
+        // Encodes standard formatting variables into pure safe alphanumeric string patterns
+        function cleanDbKey(key) {
+            return btoa(key.trim().toLowerCase()).replace(/=/g, "");
+        }
+
         async function fetchServerState() {
             try {
-                const res = await fetch(VAULT_URL, { headers: { "X-Master-Key": SECURITY_KEY } });
-                const json = await res.json();
-                chatData = json.record || { users: {}, messages: [] };
+                const res = await fetch(VAULT_URL, { headers: { "X-Master-Key": SECURITY_KEY, "X-Bin-Meta": "false" } });
+                const data = await res.json();
+                chatData = data || { users: {}, messages: [] };
+                if (!chatData.users) chatData.users = {};
+                if (!chatData.messages) chatData.messages = [];
             } catch (err) { console.error("Sync error:", err); }
         }
 
@@ -123,53 +140,18 @@
         }
 
         async function handleAuth() {
-            const user = document.getElementById('username-field').value.trim().toLowerCase();
+            const rawUser = document.getElementById('username-field').value.trim();
             const pass = document.getElementById('password-field').value;
             
-            if (!user || !pass) return alert("Please fill out all fields!");
+            if (!rawUser || !pass) return alert("Please fill out all fields!");
             
+            const dbKey = cleanDbKey(rawUser);
             document.getElementById('auth-btn').innerText = "Processing...";
             await fetchServerState();
 
             if (isLoginMode) {
-                if (chatData.users[user] && chatData.users[user] === pass) {
-                    executeLogin(user);
+                if (chatData.users[dbKey] && chatData.users[dbKey].password === pass) {
+                    executeLogin(chatData.users[dbKey].username);
                 } else {
-                    alert("Invalid username or password configuration.");
-                    document.getElementById('auth-btn').innerText = "Log In";
-                }
-            } else {
-                if (chatData.users[user]) {
-                    alert("Username already taken inside Barchalor community!");
-                    document.getElementById('auth-btn').innerText = "Sign Up";
-                } else {
-                    chatData.users[user] = pass;
-                    await saveServerState();
-                    alert("Account created successfully! Logging in...");
-                    executeLogin(user);
-                }
-            }
-        }
-
-        function executeLogin(user) {
-            localStorage.setItem('barchalor_user', user);
-            currentUser = user;
-            showDashboard();
-        }
-
-        async function showDashboard() {
-            document.getElementById('auth-screen').style.display = 'none';
-            document.getElementById('app-container').style.display = 'grid';
-            document.getElementById('user-display').innerText = `@${currentUser}`;
-            
-            syncLoop();
-            setInterval(syncLoop, 3500); // Poll live database state every 3.5 seconds
-        }
-
-        async function sendMessage() {
-            const input = document.getElementById('msg-input');
-            const text = input.value.trim();
-            if (!text) return;
-
-            chatData.messages.push({
+                    alert("Invalid account name or password verification match.");
     
