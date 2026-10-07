@@ -16,7 +16,7 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: Segoe UI, Helvetica, Arial, sans-serif; }
         body { background-color: var(--fb-bg); display: flex; height: 100vh; justify-content: center; align-items: center; }
         
-        /* Red Themed Authentication Form Card */
+        /* Red Themed Authentication Card */
         #auth-screen { background: var(--fb-card); padding: 35px 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(225, 29, 72, 0.15); text-align: center; width: 380px; border: 1px solid rgba(225, 29, 72, 0.1); }
         #auth-screen h1 { color: var(--fb-red); font-size: 2.8rem; margin-bottom: 5px; letter-spacing: -1px; font-weight: bold; }
         #auth-screen p { color: var(--text-sub); font-size: 1rem; margin-bottom: 20px; line-height: 1.4; }
@@ -32,7 +32,7 @@
         .sidebar h2 { color: var(--fb-red); margin-bottom: 20px; font-size: 1.8rem; letter-spacing: -0.5px; font-weight: bold; }
         .online-list { list-style: none; overflow-y: auto; flex-grow: 1; }
         .online-list li { padding: 12px; border-radius: 8px; margin-bottom: 6px; display: flex; align-items: center; font-weight: 600; color: var(--text-main); background: #fff5f5; font-size: 0.95rem; justify-content: space-between; }
-        .online-list li::before { content: ''; display: inline-block; width: 9px; height: 9px; background: #22c55e; border-radius: 50%; margin-right: 10px; margin-left: 0; }
+        .online-list li::before { content: ''; display: inline-block; width: 9px; height: 9px; background: #22c55e; border-radius: 50%; margin-right: 10px; }
         .online-wrapper { display: flex; align-items: center; }
         .logout-btn { padding: 12px; background: #f3f4f6; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; color: var(--text-sub); margin-top: auto; font-size: 0.95rem; }
         .logout-btn:hover { background: #e5e7eb; color: var(--text-main); }
@@ -63,7 +63,7 @@
 </head>
 <body>
 
-    <!-- Redesigned Login Portal UI Grid Screen -->
+    <!-- Native Registration/Login Panel UI Screen -->
     <div id="auth-screen">
         <h1>barchalor</h1>
         <p>Connect with friends and community.</p>
@@ -95,16 +95,24 @@
     </div>
 
     <script>
-        // High-security server-less pipeline architecture targets
-        const VAULT_URL = "https://jsonbin.io";
-        const SECURITY_KEY = "$2a$10$R6m2W3I68hXbyr68gVnCBO77zepZ.wXg6mE54qX4nZ.bM5m1kE0vC"; 
-        
-        // Defined Application Owner Account Target Identification
+        // Designated Network Owner Identity
         const OWNER_ACCOUNT = "qlitobadys@gmail.com";
 
         let isLoginMode = true;
-        let currentUser = localStorage.getItem('barchalor_user');
-        let chatData = { users: {}, messages: [] };
+        let currentUser = localStorage.getItem('barchalor_current_user');
+        
+        // Initialize dynamic data local array storage
+        let barchalorDB = JSON.parse(localStorage.getItem('barchalor_local_db')) || { users: {}, messages: [] };
+
+        // Auto-inject the Owner profile database credentials entry if missing
+        if (!barchalorDB.users[OWNER_ACCOUNT.toLowerCase()]) {
+            barchalorDB.users[OWNER_ACCOUNT.toLowerCase()] = {
+                username: OWNER_ACCOUNT,
+                password: "password123", // Default placeholder password. Change it anytime!
+                role: "owner"
+            };
+            localStorage.setItem('barchalor_local_db', JSON.stringify(barchalorDB));
+        }
 
         if (currentUser) { showDashboard(); }
 
@@ -114,44 +122,41 @@
             document.getElementById('toggle-view').innerText = isLoginMode ? 'Create new account' : 'Already have an account?';
         }
 
-        // Encodes standard formatting variables into pure safe alphanumeric string patterns
-        function cleanDbKey(key) {
-            return btoa(key.trim().toLowerCase()).replace(/=/g, "");
-        }
-
-        async function fetchServerState() {
-            try {
-                const res = await fetch(VAULT_URL, { headers: { "X-Master-Key": SECURITY_KEY, "X-Bin-Meta": "false" } });
-                const data = await res.json();
-                chatData = data || { users: {}, messages: [] };
-                if (!chatData.users) chatData.users = {};
-                if (!chatData.messages) chatData.messages = [];
-            } catch (err) { console.error("Sync error:", err); }
-        }
-
-        async function saveServerState() {
-            try {
-                await fetch(VAULT_URL, {
-                    method: "PUT",
-                    headers: { "Content-Type": "application/json", "X-Master-Key": SECURITY_KEY },
-                    body: JSON.stringify(chatData)
-                });
-            } catch (err) { console.error("Cloud storage error:", err); }
-        }
-
-        async function handleAuth() {
+        function handleAuth() {
             const rawUser = document.getElementById('username-field').value.trim();
             const pass = document.getElementById('password-field').value;
             
             if (!rawUser || !pass) return alert("Please fill out all fields!");
             
-            const dbKey = cleanDbKey(rawUser);
-            document.getElementById('auth-btn').innerText = "Processing...";
-            await fetchServerState();
+            const userKey = rawUser.toLowerCase();
 
             if (isLoginMode) {
-                if (chatData.users[dbKey] && chatData.users[dbKey].password === pass) {
-                    executeLogin(chatData.users[dbKey].username);
+                if (barchalorDB.users[userKey] && barchalorDB.users[userKey].password === pass) {
+                    executeLogin(barchalorDB.users[userKey].username);
                 } else {
                     alert("Invalid account name or password verification match.");
+                }
+            } else {
+                if (barchalorDB.users[userKey]) {
+                    alert("Account name already taken inside the Barchalor network!");
+                } else {
+                    barchalorDB.users[userKey] = {
+                        username: rawUser,
+                        password: pass,
+                        role: userKey === OWNER_ACCOUNT.toLowerCase() ? "owner" : "member"
+                    };
+                    localStorage.setItem('barchalor_local_db', JSON.stringify(barchalorDB));
+                    alert("Account created successfully! Logging you in...");
+                    executeLogin(rawUser);
+                }
+            }
+        }
+
+        function executeLogin(user) {
+            localStorage.setItem('barchalor_current_user', user);
+            currentUser = user;
+            showDashboard();
+        }
+
+        function showDashboard() {
     
