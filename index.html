@@ -439,11 +439,12 @@ $('authForm').addEventListener('submit', async event => {
   try {
     if (signingUp) {
       const { data, error } = await db.auth.signUp({
-        email,
-        password
-      });
-
-      if (error) throw error;
+  email,
+  password,
+  options: {
+    emailRedirectTo: 'https://qlitobadys-lab.github.io/barchalor-app/'
+  }
+});
 
       if (data.session) {
         showStatus('Account created successfully!');
