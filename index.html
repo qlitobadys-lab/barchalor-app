@@ -1,9 +1,11 @@
-x <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Barchalor — Connect with Everyone</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-messaging-compat.js"></script>
 <style>
 :root{--red:#e11d48;--bg:#f0f2f5;--white:#fff;--text:#202124;--muted:#65676b;--line:#e5e7eb}
 *{box-sizing:border-box;margin:0;padding:0}body{font-family:system-ui,Arial,sans-serif;background:var(--bg);color:var(--text)}button,input,textarea{font:inherit}button{cursor:pointer}button:disabled{opacity:.55;cursor:not-allowed}
@@ -19,7 +21,7 @@ header{background:#fff;padding:14px 5%;display:flex;align-items:center;justify-c
 </style>
 </head>
 <body>
-<header><div class="logo">barchalor</div><div class="header-actions"><div id="account"></div><div id="notificationWrap"><button id="notificationButton" class="notification-button" type="button" aria-expanded="false">🔔 Notifications <span id="notificationBadge" class="notification-badge" hidden>0</span></button><div id="notificationPanel" class="notification-panel" role="region" aria-label="Notifications"><div class="notification-panel-head"><strong>Notifications</strong><button id="markNotificationsRead" type="button">Mark all read</button></div><div id="notificationList"><div class="notification-empty">Loading notifications…</div></div></div></div><button id="profileButton" class="profile-trigger" style="display:none" type="button">My profile</button><button id="logout" class="secondary" style="display:none" onclick="logout()">Log out</button></div></header>
+<header><div class="logo">barchalor</div><div class="header-actions"><div id="account"></div><button id="enablePushButton" class="secondary" type="button" style="display:none">Enable push</button><div id="notificationWrap"><button id="notificationButton" class="notification-button" type="button" aria-expanded="false">🔔 Notifications <span id="notificationBadge" class="notification-badge" hidden>0</span></button><div id="notificationPanel" class="notification-panel" role="region" aria-label="Notifications"><div class="notification-panel-head"><strong>Notifications</strong><button id="markNotificationsRead" type="button">Mark all read</button></div><div id="notificationList"><div class="notification-empty">Loading notifications…</div></div></div></div><button id="profileButton" class="profile-trigger" style="display:none" type="button">My profile</button><button id="logout" class="secondary" style="display:none" onclick="logout()">Log out</button></div></header>
 <section id="auth"><h1>barchalor</h1><p>Your community. Your people.</p><form id="authForm"><input id="email" type="email" placeholder="Email address" autocomplete="email" required><input id="password" type="password" placeholder="Password (minimum 8 characters)" minlength="8" autocomplete="current-password" required><button id="authButton" class="primary" type="submit">Log in</button></form><span class="switch" id="switchMode">Don't have an account? Sign up</span><div id="status" role="status" aria-live="polite"></div></section>
 <section id="app"><div class="layout"><aside class="panel left-panel"><h3>🌍 Your community</h3><p class="muted">Meet people, share your thoughts and join the conversation.</p><p class="muted" style="margin-top:12px">Use member search to start a private conversation.</p><h3 style="margin-top:20px">🟢 Members online</h3><div id="onlineMembers" class="online-list"><p class="muted">Connecting…</p></div></aside><main>
 <section id="chatPanel"><h3>💬 Private messages</h3><div class="chat-search-row"><input id="memberSearch" type="search" placeholder="Find members by name or username" maxlength="60"><button id="searchButton" class="primary" type="button">Search</button></div><div id="chatStatus" class="chat-status" aria-live="polite">Search for a member to start chatting.</div><div id="memberResults" class="member-results"></div><h4 style="margin-top:15px">Your conversations</h4><div id="conversationList" class="conversation-list"></div><div id="chatWindow" class="chat-window" hidden><div id="chatHeader" class="chat-header"></div><div id="chatMessages" class="chat-messages" aria-live="polite"></div><form id="chatForm" class="chat-compose"><textarea id="chatText" maxlength="4000" placeholder="Write a private message..."></textarea><div class="chat-compose-bottom"><label for="chatImage">📷 Photo</label><input id="chatImage" type="file" accept="image/jpeg,image/png,image/webp,image/gif"><span class="muted">Max 5 MB</span><button id="sendChatButton" class="primary" type="submit">Send</button></div></form></div></section>
@@ -29,6 +31,71 @@ header{background:#fff;padding:14px 5%;display:flex;align-items:center;justify-c
 const SUPABASE_URL='https://vlxmxsghxejvirrcdtdn.supabase.co';
 const SUPABASE_KEY='sb_publishable_JKROndaY1L0GG8xjuBcSjg_xmV8TrNE';
 const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyD74zIkwLsTjv_u_vdYqOy5Kv4pRDzd8hI",
+  authDomain: "barchalor.firebaseapp.com",
+  projectId: "barchalor",
+  storageBucket: "barchalor.firebasestorage.app",
+  messagingSenderId: "404904480968",
+  appId: "1:404904480968:web:f53c8182ee4202dc8795fd"
+};
+const FIREBASE_VAPID_PUBLIC_KEY = "BE8dI1SJLLD8l_pwQdsuwP-0JzW0lXonUuVQIWSWucoLsZU6IZ1weKG_1WCgAQnLQWCleMpBBB_0ovDzPLn05rs";
+let firebaseMessaging = null;
+try {
+  if ("serviceWorker" in navigator && "Notification" in window && firebase?.messaging) {
+    firebase.initializeApp(FIREBASE_CONFIG);
+    firebaseMessaging = firebase.messaging();
+  }
+} catch (error) {
+  console.warn("Firebase push setup is unavailable:", error);
+}
+async function enablePushNotifications() {
+  if (!currentUser) return;
+  const button = $("enablePushButton");
+  if (!firebaseMessaging || !("serviceWorker" in navigator) || !("Notification" in window)) {
+    alert("Push notifications are not supported in this browser. Try an up-to-date version of Chrome on Android.");
+    return;
+  }
+  if (!FIREBASE_VAPID_PUBLIC_KEY || FIREBASE_VAPID_PUBLIC_KEY.length < 50) {
+    alert("The Firebase Web Push public key is missing. Check Firebase Console → Project settings → Cloud Messaging → Web Push certificates.");
+    return;
+  }
+  button.disabled = true;
+  button.textContent = "Enabling…";
+  try {
+    const permission = await Notification.requestPermission();
+    if (permission !== "granted") {
+      alert("Notifications were not allowed. You can enable them later in your browser's site settings.");
+      return;
+    }
+    const sw = await navigator.serviceWorker.register("/barchalor-app/firebase-messaging-sw.js", {
+      scope: "/barchalor-app/"
+    });
+    const token = await firebaseMessaging.getToken({
+      vapidKey: FIREBASE_VAPID_PUBLIC_KEY,
+      serviceWorkerRegistration: sw
+    });
+    if (!token) throw new Error("Firebase did not return a device token. Check your Firebase Web Push settings.");
+    const { error } = await db.from("push_subscriptions").upsert({
+      user_id: currentUser.id,
+      fcm_token: token,
+      updated_at: new Date().toISOString()
+    }, { onConflict: "fcm_token" });
+    if (error) {
+      throw new Error("The device token was created, but could not be saved. Run the push_subscriptions SQL setup in Supabase first. Details: " + error.message);
+    }
+    button.textContent = "Push enabled";
+    alert("Push notifications are enabled on this device. Delivery still needs the secure server-side sender to be configured.");
+  } catch (error) {
+    console.error("Could not enable push notifications:", error);
+    alert(error.message || "Could not enable push notifications. Check Firebase and Supabase setup.");
+  } finally {
+    button.disabled = false;
+    if (button.textContent === "Enabling…") button.textContent = "Enable push";
+  }
+}
+
 let currentUser=null,signingUp=false,busy=false,likedPosts=new Set(),activeConversationId=null,activeOtherUser=null,messageChannel=null,refreshingMessages=false,presenceChannel=null,postChannel=null,postRefreshTimer=null,onlineUserIds=new Set(),myProfile=null,notificationChannel=null,notificationItems=[];
 const $=id=>document.getElementById(id); const allowedTypes=['image/jpeg','image/png','image/webp','image/gif'];
 function showStatus(message,error=false){$('status').textContent=message;$('status').style.color=error?'#b42318':'#167d43'}
@@ -50,12 +117,12 @@ async function initialise(){
     const user=result?.data?.user;
     if(result?.error||!user){
       currentUser=null;$('app').style.display='none';$('auth').style.display='block';$('logout').style.display='none';$('profileButton').style.display='none';$('account').textContent='';
-      stopMessageRealtime();stopPostRealtime();stopNotificationRealtime();$('notificationWrap').style.display='none';
+      stopMessageRealtime();stopPostRealtime();stopNotificationRealtime();$('notificationWrap').style.display='none';$('enablePushButton').style.display='none';
       return;
     }
     currentUser=user;
     // Show the bell immediately after confirming a signed-in user, before feed/profile requests.
-    $('notificationWrap').style.display='inline-block';
+    $('notificationWrap').style.display='inline-block';$('enablePushButton').style.display='inline-block';
     $('auth').style.display='none';$('app').style.display='block';$('logout').style.display='inline-block';$('account').textContent=currentUser.email||'Signed in';
     try{await ensureProfile(currentUser)}catch(error){console.error('Profile setup:',error)}
     // Keep optional sections from preventing notifications from appearing.
@@ -112,6 +179,7 @@ function startNotificationRealtime(){
     .subscribe(status=>{if(status==='CHANNEL_ERROR'||status==='TIMED_OUT')console.warn('Notification realtime unavailable:',status)});
 }
 function stopNotificationRealtime(){if(notificationChannel){db.removeChannel(notificationChannel);notificationChannel=null}}
+$('enablePushButton').addEventListener('click', enablePushNotifications);
 $('notificationButton').addEventListener('click',()=>{const open=$('notificationPanel').classList.toggle('open');$('notificationButton').setAttribute('aria-expanded',String(open));if(open)loadNotifications()});
 $('markNotificationsRead').addEventListener('click',async()=>{
   if(!currentUser)return;
@@ -162,7 +230,7 @@ $('profileForm').addEventListener('submit',async e=>{e.preventDefault();if(!curr
 // Realtime presence is temporary: a member appears online while their app session is connected.
 function startPresence(){if(!currentUser)return;if(presenceChannel){db.removeChannel(presenceChannel);presenceChannel=null}presenceChannel=db.channel('barchalor-live-presence',{config:{presence:{key:currentUser.id}}}).on('presence',{event:'sync'},()=>{const state=presenceChannel.presenceState();onlineUserIds=new Set(Object.keys(state));updateAvatarPresence();loadOnlineMembers()}).subscribe(status=>{if(status==='SUBSCRIBED'){presenceChannel.track({user_id:currentUser.id,online_at:new Date().toISOString()})}else if(status==='CHANNEL_ERROR'||status==='TIMED_OUT'){console.warn('Presence unavailable:',status)}})}
 async function loadOnlineMembers(){const box=$('onlineMembers');if(!box||!currentUser)return;box.replaceChildren();const ids=[...onlineUserIds].filter(id=>id!==currentUser.id);if(!ids.length){const p=document.createElement('p');p.className='muted';p.textContent='No other members are online right now.';box.append(p);return}const {data,error}=await db.from('profiles').select('id,username,display_name,avatar_url,bio').in('id',ids).limit(20);if(error){box.textContent='Online list unavailable.';return}for(const person of data||[]){const b=document.createElement('button');b.type='button';b.className='online-member';const av=makeAvatar(person);av.dataset.userId=person.id;const meta=document.createElement('div');meta.className='member-meta';const name=document.createElement('strong');name.textContent=person.display_name||person.username;const sub=document.createElement('span');sub.innerHTML='<i class="status-dot"></i>Online';meta.append(name,sub);b.append(av,meta);b.addEventListener('click',()=>startChat(person));box.append(b)}const right=$('onlineMembersRight');if(right){right.replaceChildren();const rows=box.querySelectorAll('.online-member');rows.forEach(row=>right.append(row.cloneNode(true)));right.querySelectorAll('.online-member').forEach((row,index)=>row.addEventListener('click',()=>{const person=(data||[])[index];if(person)startChat(person)}))}}
-async function logout(){stopMessageRealtime();stopPostRealtime();stopNotificationRealtime();notificationItems=[];if(presenceChannel){await db.removeChannel(presenceChannel);presenceChannel=null}onlineUserIds.clear();const {error}=await db.auth.signOut();if(error){alert('Logout failed: '+error.message);return}currentUser=null;activeConversationId=null;activeOtherUser=null;$('app').style.display='none';$('auth').style.display='block';$('logout').style.display='none';$('account').textContent='';$('profileButton').style.display='none';$('notificationWrap').style.display='none';showStatus('You have logged out.')}
+async function logout(){stopMessageRealtime();stopPostRealtime();stopNotificationRealtime();notificationItems=[];if(presenceChannel){await db.removeChannel(presenceChannel);presenceChannel=null}onlineUserIds.clear();const {error}=await db.auth.signOut();if(error){alert('Logout failed: '+error.message);return}currentUser=null;activeConversationId=null;activeOtherUser=null;$('app').style.display='none';$('auth').style.display='block';$('logout').style.display='none';$('account').textContent='';$('profileButton').style.display='none';$('notificationWrap').style.display='none';$('enablePushButton').style.display='none';showStatus('You have logged out.')}
 db.auth.onAuthStateChange((event,session)=>{if((event==='SIGNED_IN'||event==='INITIAL_SESSION')&&session)setTimeout(()=>initialise(),0);if(event==='SIGNED_OUT'){stopMessageRealtime();stopPostRealtime();stopNotificationRealtime();$('notificationWrap').style.display='none'}});
 initialise();setInterval(()=>{if(currentUser&&!busy){loadConversations();if(activeConversationId)loadActiveMessages()}},30000);
 </script>
