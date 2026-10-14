@@ -60,16 +60,99 @@ header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.94);backdro
   #chatPanel .chat-search-row{top:64px}
 }
 
+
+/* Always-visible mobile shortcuts to member search and private messages */
+#quickChatNav{position:sticky;top:0;z-index:60;display:none;justify-content:center;gap:10px;padding:9px 12px;background:rgba(255,255,255,.97);border-bottom:1px solid #f3dfe2;box-shadow:0 4px 14px rgba(130,35,50,.08);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+#quickChatNav button{border:1px solid #f4cdd3;border-radius:999px;background:#fff0f1;color:#d92f43;padding:10px 15px;font-size:14px;font-weight:800;box-shadow:0 2px 7px rgba(130,35,50,.06)}
+#quickChatNav button:active{transform:scale(.98)}
+body.signed-in #quickChatNav{display:flex}
+@media(max-width:600px){#quickChatNav{top:0;gap:8px;padding:8px 7px}#quickChatNav button{flex:1;padding:10px 5px;font-size:13px}}
+
+
+/* Design based on the user's mock-up: clean grey, white cards and red actions. */
+:root{--red:#e64045;--bg:#e9edef;--text:#171717;--muted:#777;--line:#e5e5e5;--brand-soft:#f4f4f4}
+body{background:#e9edef}
+header{display:flex;gap:14px;justify-content:space-between;min-height:82px;padding:12px max(14px,calc((100% - 980px)/2));}
+.logo{font-size:0;letter-spacing:0;flex:0 0 auto}
+.logo:before{content:"b";width:58px;height:58px;border-radius:19px;background:linear-gradient(145deg,#ff6666,#d71920);font-size:43px;box-shadow:0 5px 12px #0002}
+.header-actions{flex:1;gap:10px;flex-wrap:nowrap;justify-content:flex-end}
+#account,#enablePushButton,#notificationWrap,#logout{display:none!important}
+.messenger-icon{width:58px;height:58px;flex:0 0 58px;border:0;border-radius:50%;background:#f3f3f3;color:#444;font-size:34px;display:grid;place-items:center}
+#profileButton{width:58px;height:58px;border-radius:50%;padding:0;background:#f3f3f3;border:3px solid #eee;font-size:0;overflow:hidden}
+#profileButton:after{content:'👤';font-size:30px}
+#app .layout{display:block;max-width:720px;padding:12px 12px 30px}
+.left-panel,.right-panel{display:none!important}
+.composer,.post,#chatPanel{background:#fff;border:0;border-radius:24px;box-shadow:0 7px 20px #0000000d;padding:18px;margin:0 0 18px}
+.composer h3{display:none}
+.composer textarea{min-height:62px;border:0;border-radius:24px;background:#f0f0f0;padding:14px 18px;margin:0 0 12px;font-size:18px}
+.upload-row{margin:0 0 10px}
+.upload-row label{font-size:16px}
+.composer .primary{width:auto;min-width:100px;float:right;padding:10px 20px}
+.composer form:after{content:'';display:block;clear:both}
+.post{padding:18px;margin-bottom:18px}
+.post-head{gap:12px;margin-bottom:16px}
+.post .avatar{width:48px;height:48px;border-radius:50%;background:#eee;color:#777;box-shadow:none}
+.post-head strong{font-size:20px;color:#111}
+.post-image{max-height:none;border-radius:18px;background:#eee}
+.post-actions{border:0;padding-top:10px;justify-content:space-between}
+.post-actions button{border-radius:24px;background:#f0f0f0;color:#555;font-size:16px;padding:10px 16px}
+.post-actions button.liked{background:#fff0f0;color:#df343b}
+#feedStatus{padding:14px}
+#chatPanel{display:none!important;max-height:none;position:static;overflow:visible;margin-top:0}
+body.chat-page-open #app .layout{display:block!important;max-width:720px;padding-top:14px}
+body.chat-page-open #app .layout>.left-panel,
+body.chat-page-open #app .layout>.right-panel{display:none!important}
+body.chat-page-open #app .layout>main{width:100%;min-width:0}
+body.chat-page-open #app .layout main>.composer,
+body.chat-page-open #app .layout main>#feedStatus,
+body.chat-page-open #app .layout main>#feed{display:none!important}
+body.chat-page-open #chatPanel{display:block!important}
+.chat-page-heading{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.chat-page-heading h3{margin:0!important;font-size:22px!important}
+#backToFeedButton{flex:0 0 auto}
+#chatPanel .chat-search-row{position:sticky;top:0;background:white;padding:8px 0;z-index:3}
+.chat-search-row input{border-radius:22px!important;padding:13px 15px!important;background:#f3f3f3!important}
+.chat-search-row button{border-radius:22px!important}
+.member-result,.conversation-item{border-radius:16px;padding:13px}
+.chat-window{border-radius:16px}
+@media(max-width:600px){header{min-height:76px;padding:9px 12px}.logo:before{width:50px;height:50px;font-size:38px;border-radius:16px}.header-actions{gap:8px}.messenger-icon,#profileButton{width:50px;height:50px;flex-basis:50px}.messenger-icon{font-size:30px}#app .layout{padding:10px 9px 24px}.composer,.post,#chatPanel{padding:15px;border-radius:21px}.post-head strong{font-size:18px}.post-actions button{font-size:14px;padding:9px 13px}}
+
 </style>
 </head>
 <body>
-<header><div class="logo">barchalor</div><div class="header-actions"><div id="account"></div><button id="enablePushButton" class="secondary" type="button" style="display:none">Enable push</button><div id="notificationWrap"><button id="notificationButton" class="notification-button" type="button" aria-expanded="false">🔔 Notifications <span id="notificationBadge" class="notification-badge" hidden>0</span></button><div id="notificationPanel" class="notification-panel" role="region" aria-label="Notifications"><div class="notification-panel-head"><strong>Notifications</strong><button id="markNotificationsRead" type="button">Mark all read</button></div><div id="notificationList"><div class="notification-empty">Loading notifications…</div></div></div></div><button id="profileButton" class="profile-trigger" style="display:none" type="button">My profile</button><button id="logout" class="secondary" style="display:none" onclick="logout()">Log out</button></div></header>
+<header><div class="logo">barchalor</div><div class="header-actions"><button id="headerMessengerButton" class="messenger-icon" type="button" aria-label="Open private messages" title="Private messages">☏</button><div id="account"></div><button id="enablePushButton" class="secondary" type="button" style="display:none">Enable push</button><div id="notificationWrap"><button id="notificationButton" class="notification-button" type="button" aria-expanded="false">🔔 Notifications <span id="notificationBadge" class="notification-badge" hidden>0</span></button><div id="notificationPanel" class="notification-panel" role="region" aria-label="Notifications"><div class="notification-panel-head"><strong>Notifications</strong><button id="markNotificationsRead" type="button">Mark all read</button></div><div id="notificationList"><div class="notification-empty">Loading notifications…</div></div></div></div><button id="profileButton" class="profile-trigger" style="display:none" type="button">My profile</button><button id="logout" class="secondary" style="display:none" onclick="logout()">Log out</button></div></header>
+<nav id="quickChatNav" aria-label="Community navigation">
+  <button id="quickFindPeople" type="button">🔎 Find people</button>
+  <button id="quickPrivateChat" type="button">💬 Private chat</button>
+</nav>
 <section id="auth"><h1>barchalor</h1><p>Your community. Your people.</p><form id="authForm"><input id="email" type="email" placeholder="Email address" autocomplete="email" required><input id="password" type="password" placeholder="Password (minimum 8 characters)" minlength="8" autocomplete="current-password" required><button id="authButton" class="primary" type="submit">Log in</button></form><span class="switch" id="switchMode">Don't have an account? Sign up</span><div id="status" role="status" aria-live="polite"></div></section>
 <section id="app"><div class="layout"><aside class="panel left-panel"><h3>🌍 Your community</h3><p class="muted">Meet people, share your thoughts and join the conversation.</p><p class="muted" style="margin-top:12px">Use member search to start a private conversation.</p><h3 style="margin-top:20px">🟢 Members online</h3><div id="onlineMembers" class="online-list"><p class="muted">Connecting…</p></div></aside><main>
 
-<div class="composer"><h3 style="margin-bottom:12px">Create a post</h3><form id="postForm"><textarea id="postText" maxlength="5000" placeholder="What's on your mind? (optional if you add a photo)"></textarea><div class="upload-row"><label for="postImage"><strong>📷 Add a photo</strong></label><input id="postImage" type="file" accept="image/jpeg,image/png,image/webp,image/gif"><span class="muted">Maximum 5 MB</span></div><div id="previewWrap" class="preview-wrap"><img id="imagePreview" alt="Selected image preview"><button id="removeImage" type="button" class="secondary">Remove photo</button></div><button id="postButton" class="primary" type="submit">Publish post</button></form></div><div id="feedStatus">Loading posts...</div><div id="feed"></div><section id="chatPanel"><h3>💬 Private messages</h3><div class="chat-search-row"><input id="memberSearch" type="search" placeholder="Find members by name or username" maxlength="60"><button id="searchButton" class="primary" type="button">Search</button></div><div id="chatStatus" class="chat-status" aria-live="polite">Search for a member to start chatting.</div><div id="memberResults" class="member-results"></div><h4 style="margin-top:15px">Your conversations</h4><div id="conversationList" class="conversation-list"></div><div id="chatWindow" class="chat-window" hidden><div id="chatHeader" class="chat-header"></div><div id="chatMessages" class="chat-messages" aria-live="polite"></div><form id="chatForm" class="chat-compose"><textarea id="chatText" maxlength="4000" placeholder="Write a private message..."></textarea><div class="chat-compose-bottom"><label for="chatImage">📷 Photo</label><input id="chatImage" type="file" accept="image/jpeg,image/png,image/webp,image/gif"><span class="muted">Max 5 MB</span><button id="sendChatButton" class="primary" type="submit">Send</button></div></form></div></section></main><aside class="panel right-panel"><h3>💬 Community</h3><p class="muted">Share posts and talk privately with other members.</p><h3 style="margin-top:18px">🟢 Members online</h3><div id="onlineMembersRight" class="online-list"></div></aside></div></section>
+<div class="composer"><h3 style="margin-bottom:12px">Create a post</h3><form id="postForm"><textarea id="postText" maxlength="5000" placeholder="What's on your mind? (optional if you add a photo)"></textarea><div class="upload-row"><label for="postImage"><strong>📷 Add a photo</strong></label><input id="postImage" type="file" accept="image/jpeg,image/png,image/webp,image/gif"><span class="muted">Maximum 5 MB</span></div><div id="previewWrap" class="preview-wrap"><img id="imagePreview" alt="Selected image preview"><button id="removeImage" type="button" class="secondary">Remove photo</button></div><button id="postButton" class="primary" type="submit">Publish post</button></form></div><div id="feedStatus">Loading posts...</div><div id="feed"></div><section id="chatPanel"><div class="chat-page-heading"><button type="button" id="backToFeedButton" class="secondary">← Feed</button><h3>Private messages</h3></div><div class="chat-search-row"><input id="memberSearch" type="search" placeholder="Find members by name or username" maxlength="60"><button id="searchButton" class="primary" type="button">Search</button></div><div id="chatStatus" class="chat-status" aria-live="polite">Search for a member to start chatting.</div><div id="memberResults" class="member-results"></div><h4 style="margin-top:15px">Your conversations</h4><div id="conversationList" class="conversation-list"></div><div id="chatWindow" class="chat-window" hidden><div id="chatHeader" class="chat-header"></div><div id="chatMessages" class="chat-messages" aria-live="polite"></div><form id="chatForm" class="chat-compose"><textarea id="chatText" maxlength="4000" placeholder="Write a private message..."></textarea><div class="chat-compose-bottom"><label for="chatImage">📷 Photo</label><input id="chatImage" type="file" accept="image/jpeg,image/png,image/webp,image/gif"><span class="muted">Max 5 MB</span><button id="sendChatButton" class="primary" type="submit">Send</button></div></form></div></section></main><aside class="panel right-panel"><h3>💬 Community</h3><p class="muted">Share posts and talk privately with other members.</p><h3 style="margin-top:18px">🟢 Members online</h3><div id="onlineMembersRight" class="online-list"></div></aside></div></section>
 <div id="profileModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="profileModalTitle"><section class="profile-modal"><div class="modal-title"><h2 id="profileModalTitle">My profile</h2><button id="closeProfile" class="icon-close" type="button" aria-label="Close">✕</button></div><div class="profile-card"><div id="profileAvatarPreview" class="avatar profile-big">?</div><div><strong id="profilePreviewName">Your name</strong><div id="profilePreviewUsername" class="muted">@username</div><div id="profilePreviewBio" class="bio-text">Add a short bio about yourself.</div></div></div><form id="profileForm" class="profile-form"><label>Profile picture<input id="avatarFile" type="file" accept="image/jpeg,image/png,image/webp,image/gif"></label><div class="muted">JPG, PNG, WEBP or GIF; maximum 5 MB.</div><button id="removeAvatar" class="secondary" type="button">Remove profile picture</button><label>Display name<input id="displayNameInput" maxlength="60" required placeholder="Your display name"></label><label>Username<input id="usernameInput" minlength="3" maxlength="24" pattern="[A-Za-z0-9_]+" required placeholder="letters, numbers and underscore"></label><label>Bio<textarea id="bioInput" maxlength="180" placeholder="Tell people a little about yourself"></textarea></label><div id="profileStatus" class="chat-status" role="status"></div><button id="saveProfile" class="primary" type="submit">Save profile</button></form></section></div>
 <script>
+
+// Dedicated private-chat page: feed stays separate from conversations.
+function openPrivateChatPage(){
+  document.body.classList.add('chat-page-open');
+  const panel=document.getElementById('chatPanel');
+  if(panel) panel.scrollTop=0;
+  window.scrollTo({top:0,behavior:'smooth'});
+  const input=document.getElementById('memberSearch');
+  if(input) input.focus({preventScroll:true});
+}
+function closePrivateChatPage(){
+  document.body.classList.remove('chat-page-open');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+document.getElementById('headerMessengerButton')?.addEventListener('click',()=>{
+  if(document.body.classList.contains('chat-page-open')) closePrivateChatPage();
+  else openPrivateChatPage();
+});
+document.getElementById('backToFeedButton')?.addEventListener('click',closePrivateChatPage);
+document.getElementById('quickFindPeople')?.addEventListener('click',()=>{openPrivateChatPage();setTimeout(()=>document.getElementById('memberSearch')?.focus({preventScroll:true}),50)});
+document.getElementById('quickPrivateChat')?.addEventListener('click',()=>{openPrivateChatPage();setTimeout(()=>document.getElementById('memberSearch')?.focus({preventScroll:true}),50)});
+
 const SUPABASE_URL='https://vlxmxsghxejvirrcdtdn.supabase.co';
 const SUPABASE_KEY='sb_publishable_JKROndaY1L0GG8xjuBcSjg_xmV8TrNE';
 const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
@@ -185,11 +268,11 @@ async function initialise(){
     try{result=await db.auth.getUser()}catch(error){console.error('Auth check failed:',error);return}
     const user=result?.data?.user;
     if(result?.error||!user){
-      currentUser=null;$('app').style.display='none';$('auth').style.display='block';$('logout').style.display='none';$('profileButton').style.display='none';$('account').textContent='';
+      currentUser=null;document.body.classList.remove('signed-in');$('app').style.display='none';$('auth').style.display='block';$('logout').style.display='none';$('profileButton').style.display='none';$('account').textContent='';
       stopMessageRealtime();stopPostRealtime();stopNotificationRealtime();$('notificationWrap').style.display='none';$('enablePushButton').style.display='none';
       return;
     }
-    currentUser=user;
+    currentUser=user;document.body.classList.add('signed-in');
     // Show the bell immediately after confirming a signed-in user, before feed/profile requests.
     $('notificationWrap').style.display='inline-block';$('enablePushButton').style.display='inline-block';
     $('auth').style.display='none';$('app').style.display='block';$('logout').style.display='inline-block';$('account').textContent=currentUser.email||'Signed in';
