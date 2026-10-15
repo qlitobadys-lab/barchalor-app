@@ -76,7 +76,6 @@ header{display:flex;gap:14px;justify-content:space-between;min-height:82px;paddi
 .logo{font-size:0;letter-spacing:0;flex:0 0 auto}
 .logo:before{content:"b";width:58px;height:58px;border-radius:19px;background:linear-gradient(145deg,#ff6666,#d71920);font-size:43px;box-shadow:0 5px 12px #0002}
 .header-actions{flex:1;gap:10px;flex-wrap:nowrap;justify-content:flex-end}
-#account,#enablePushButton,#notificationWrap,#logout{display:none!important}
 .messenger-icon{width:58px;height:58px;flex:0 0 58px;border:0;border-radius:50%;background:#f3f3f3;color:#444;font-size:34px;display:grid;place-items:center}
 #profileButton{width:58px;height:58px;border-radius:50%;padding:0;background:#f3f3f3;border:3px solid #eee;font-size:0;overflow:hidden}
 #profileButton:after{content:'👤';font-size:30px}
@@ -117,20 +116,78 @@ body.chat-page-open #chatPanel{display:block!important}
 .chat-window{border-radius:16px}
 @media(max-width:600px){header{min-height:76px;padding:9px 12px}.logo:before{width:50px;height:50px;font-size:38px;border-radius:16px}.header-actions{gap:8px}.messenger-icon,#profileButton{width:50px;height:50px;flex-basis:50px}.messenger-icon{font-size:30px}#app .layout{padding:10px 9px 24px}.composer,.post,#chatPanel{padding:15px;border-radius:21px}.post-head strong{font-size:18px}.post-actions button{font-size:14px;padding:9px 13px}}
 
+
+
+/* Final Barchalor theme: clean white surfaces with soft, light-red accents. */
+:root{--red:#e94b5b;--bg:#fff7f8;--white:#fff;--text:#302126;--muted:#85737a;--line:#f5dfe3;--brand-soft:#fff0f2;--shadow:0 8px 26px rgba(174,48,68,.08)}
+body{background:linear-gradient(180deg,#fff0f2 0,#fff8f9 230px,#fff8f9 100%);color:var(--text)}
+header{background:rgba(255,255,255,.97);border-bottom:1px solid #f8dce1;box-shadow:0 4px 18px rgba(174,48,68,.07)}
+.logo:before{background:linear-gradient(145deg,#ff9da8,#e94b5b);box-shadow:0 5px 14px rgba(233,75,91,.22)}
+.primary{background:linear-gradient(135deg,#ff8794,#e94b5b);box-shadow:0 4px 12px rgba(233,75,91,.18)}
+.secondary,.profile-trigger,.notification-button{background:#fff0f2;color:#c93b4b;border-color:#f7d7dc}
+.secondary:hover,.profile-trigger:hover,.notification-button:hover{background:#ffe3e7}
+#auth,.panel,.composer,.post,#chatPanel,.profile-modal{background:#fff;border-color:#f8e3e6;box-shadow:0 8px 26px rgba(174,48,68,.07)}
+#auth h1{color:#df4354}
+#auth input,.composer textarea,.chat-search-row input,.chat-compose textarea,.profile-form input,.profile-form textarea{background:#fffafb;border-color:#f1dfe2}
+.avatar{background:#ffe5e8;color:#ce3d4d;box-shadow:inset 0 0 0 1px #f8d6dc}
+.post-actions button{background:#fff0f2;color:#795e65}
+.post-actions button:hover,.post-actions button.liked{background:#ffe2e6;color:#cf394a}
+.comment,.profile-card,.preview-wrap{background:#fff2f4;border-color:#f8dfe3}
+.chat-messages{background:linear-gradient(180deg,#fffafa,#fff1f3)}
+.bubble.mine{background:linear-gradient(135deg,#ff9aa5,#e94b5b);color:#fff;border-color:transparent}
+.member-result,.conversation-item,.online-member{border-color:#f4e0e3}
+.member-result:hover,.conversation-item:hover,.online-member:hover{background:#fff2f4;border-color:#f3c4cc}
+.conversation-item.active{border-color:#ee8b98;background:#fff0f2}
+.chat-header{background:#fff8f9;border-color:#f5dfe3}
+.chat-compose{background:#fff;border-color:#f5dfe3}
+#quickChatNav{position:sticky;top:82px;z-index:45;display:flex;gap:10px;justify-content:center;padding:10px 12px;margin:0 auto;max-width:720px;background:rgba(255,255,255,.96);border:1px solid #f7dfe3;border-top:0;border-radius:0 0 18px 18px;box-shadow:0 5px 18px rgba(174,48,68,.06);backdrop-filter:blur(12px)}
+#quickChatNav button{flex:1;border:1px solid #f5cbd2;border-radius:13px;background:#fff0f2;color:#c93b4b;padding:11px 13px;font-weight:800}
+#quickChatNav button:hover{background:#ffe1e6;box-shadow:0 4px 12px rgba(233,75,91,.10)}
+#quickChatNav button.active{background:#e94b5b;color:#fff;border-color:#e94b5b}
+.messenger-icon{background:#fff0f2!important;color:#c93b4b!important;border:1px solid #f7d7dc!important}
+#profileButton:after{content:'👤';font-size:27px}
+#chatPanel .chat-search-row{background:rgba(255,255,255,.97)}
+.notification-panel{border-color:#f5dfe3}
+.notification-item.unread{background:#fff0f2}
+@media(max-width:600px){
+  #quickChatNav{top:76px;gap:7px;padding:8px 7px;border-radius:0 0 15px 15px}
+  #quickChatNav button{padding:10px 6px;font-size:12px;line-height:1.25}
+  header{background:rgba(255,255,255,.98)}
+  .messenger-icon,#profileButton{width:44px;height:44px;flex-basis:44px}
+  .messenger-icon{font-size:23px}
+  #account{display:none}
+  .notification-button{font-size:0;padding:9px 10px}
+  .notification-button:first-letter{font-size:16px}
+  .notification-badge{font-size:10px}
+}
+
+
+/* Profile menu tabs and restored Settings section */
+.profile-modal-tabs{display:flex;gap:8px;border-bottom:1px solid #f3dfe2;padding-bottom:10px;margin-bottom:14px}
+.profile-tab{flex:1;border:1px solid #f4dce0;background:#fff7f7;color:#76565d;border-radius:11px;padding:11px 8px;font-weight:750}
+.profile-tab.active{background:#f04455;color:#fff;border-color:#f04455;box-shadow:0 5px 13px #f0445525}
+.profile-tab-content[hidden]{display:none!important}
+.settings-heading{font-size:20px;margin:8px 0 4px;color:#291c20}.settings-intro{margin-bottom:14px;line-height:1.5}
+.settings-row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 12px;margin:9px 0;border:1px solid #f3dfe2;border-radius:13px;background:#fffafa}
+.settings-row strong{font-size:14px}.settings-row .muted{margin-top:4px;line-height:1.4;overflow-wrap:anywhere}.theme-chip{font-size:12px;font-weight:800;color:#c93b4b;background:#ffe7e9;border-radius:20px;padding:6px 10px;white-space:nowrap}
+.settings-note{background:#fff0f2;color:#76565d;border-radius:12px;padding:12px;font-size:12px;line-height:1.5;margin-top:14px}.settings-done{width:100%;margin-top:14px}
+
 </style>
 </head>
 <body>
-<header><div class="logo">barchalor</div><div class="header-actions"><button id="headerMessengerButton" class="messenger-icon" type="button" aria-label="Open private messages" title="Private messages">☏</button><div id="account"></div><button id="enablePushButton" class="secondary" type="button" style="display:none">Enable push</button><div id="notificationWrap"><button id="notificationButton" class="notification-button" type="button" aria-expanded="false">🔔 Notifications <span id="notificationBadge" class="notification-badge" hidden>0</span></button><div id="notificationPanel" class="notification-panel" role="region" aria-label="Notifications"><div class="notification-panel-head"><strong>Notifications</strong><button id="markNotificationsRead" type="button">Mark all read</button></div><div id="notificationList"><div class="notification-empty">Loading notifications…</div></div></div></div><button id="profileButton" class="profile-trigger" style="display:none" type="button">My profile</button><button id="logout" class="secondary" style="display:none" onclick="logout()">Log out</button></div></header>
+<header><div class="logo">barchalor</div><div class="header-actions"><button id="headerMessengerButton" class="messenger-icon" type="button" aria-label="Open private messages" title="Private messages">💬</button><div id="account"></div><button id="enablePushButton" class="secondary" type="button" style="display:none">Enable push</button><div id="notificationWrap"><button id="notificationButton" class="notification-button" type="button" aria-expanded="false">🔔 Notifications <span id="notificationBadge" class="notification-badge" hidden>0</span></button><div id="notificationPanel" class="notification-panel" role="region" aria-label="Notifications"><div class="notification-panel-head"><strong>Notifications</strong><button id="markNotificationsRead" type="button">Mark all read</button></div><div id="notificationList"><div class="notification-empty">Loading notifications…</div></div></div></div><button id="profileButton" class="profile-trigger" style="display:none" type="button">My profile</button><button id="logout" class="secondary" style="display:none" onclick="logout()">Log out</button></div></header>
 <section id="auth"><h1>barchalor</h1><p>Your community. Your people.</p><form id="authForm"><input id="email" type="email" placeholder="Email address" autocomplete="email" required><input id="password" type="password" placeholder="Password (minimum 8 characters)" minlength="8" autocomplete="current-password" required><button id="authButton" class="primary" type="submit">Log in</button></form><span class="switch" id="switchMode">Don't have an account? Sign up</span><div id="status" role="status" aria-live="polite"></div></section>
-<section id="app"><div class="layout"><aside class="panel left-panel"><h3>🌍 Your community</h3><p class="muted">Meet people, share your thoughts and join the conversation.</p><p class="muted" style="margin-top:12px">Use member search to start a private conversation.</p><h3 style="margin-top:20px">🟢 Members online</h3><div id="onlineMembers" class="online-list"><p class="muted">Connecting…</p></div></aside><main>
+<section id="app"><nav id="quickChatNav" aria-label="Main navigation"><button id="feedNavButton" type="button">⌂ &nbsp; Home feed</button><button id="privateChatNavButton" type="button">▣ &nbsp; Private chat / Find people</button></nav><div class="layout"><aside class="panel left-panel"><h3>🌍 Your community</h3><p class="muted">Meet people, share your thoughts and join the conversation.</p><p class="muted" style="margin-top:12px">Use member search to start a private conversation.</p><h3 style="margin-top:20px">🟢 Members online</h3><div id="onlineMembers" class="online-list"><p class="muted">Connecting…</p></div></aside><main>
 
 <div class="composer"><h3 style="margin-bottom:12px">Create a post</h3><form id="postForm"><textarea id="postText" maxlength="5000" placeholder="What's on your mind? (optional if you add a photo)"></textarea><div class="upload-row"><label for="postImage"><strong>📷 Add a photo</strong></label><input id="postImage" type="file" accept="image/jpeg,image/png,image/webp,image/gif"><span class="muted">Maximum 5 MB</span></div><div id="previewWrap" class="preview-wrap"><img id="imagePreview" alt="Selected image preview"><button id="removeImage" type="button" class="secondary">Remove photo</button></div><button id="postButton" class="primary" type="submit">Publish post</button></form></div><div id="feedStatus">Loading posts...</div><div id="feed"></div><section id="chatPanel"><div class="chat-page-heading"><button type="button" id="backToFeedButton" class="secondary">← Feed</button><h3>Private messages</h3></div><div class="chat-search-row"><input id="memberSearch" type="search" placeholder="Find members by name or username" maxlength="60"><button id="searchButton" class="primary" type="button">Search</button></div><div id="chatStatus" class="chat-status" aria-live="polite">Search for a member to start chatting.</div><div id="memberResults" class="member-results"></div><h4 style="margin-top:15px">Your conversations</h4><div id="conversationList" class="conversation-list"></div><div id="chatWindow" class="chat-window" hidden><div id="chatHeader" class="chat-header"></div><div id="chatMessages" class="chat-messages" aria-live="polite"></div><form id="chatForm" class="chat-compose"><textarea id="chatText" maxlength="4000" placeholder="Write a private message..."></textarea><div class="chat-compose-bottom"><label for="chatImage">📷 Photo</label><input id="chatImage" type="file" accept="image/jpeg,image/png,image/webp,image/gif"><span class="muted">Max 5 MB</span><button id="sendChatButton" class="primary" type="submit">Send</button></div></form></div></section></main><aside class="panel right-panel"><h3>💬 Community</h3><p class="muted">Share posts and talk privately with other members.</p><h3 style="margin-top:18px">🟢 Members online</h3><div id="onlineMembersRight" class="online-list"></div></aside></div></section>
-<div id="profileModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="profileModalTitle"><section class="profile-modal"><div class="modal-title"><h2 id="profileModalTitle">My profile</h2><button id="closeProfile" class="icon-close" type="button" aria-label="Close">✕</button></div><div class="profile-card"><div id="profileAvatarPreview" class="avatar profile-big">?</div><div><strong id="profilePreviewName">Your name</strong><div id="profilePreviewUsername" class="muted">@username</div><div id="profilePreviewBio" class="bio-text">Add a short bio about yourself.</div></div></div><form id="profileForm" class="profile-form"><label>Profile picture<input id="avatarFile" type="file" accept="image/jpeg,image/png,image/webp,image/gif"></label><div class="muted">JPG, PNG, WEBP or GIF; maximum 5 MB.</div><button id="removeAvatar" class="secondary" type="button">Remove profile picture</button><label>Display name<input id="displayNameInput" maxlength="60" required placeholder="Your display name"></label><label>Username<input id="usernameInput" minlength="3" maxlength="24" pattern="[A-Za-z0-9_]+" required placeholder="letters, numbers and underscore"></label><label>Bio<textarea id="bioInput" maxlength="180" placeholder="Tell people a little about yourself"></textarea></label><div id="profileStatus" class="chat-status" role="status"></div><button id="saveProfile" class="primary" type="submit">Save profile</button></form><div class="profile-settings" style="margin-top:18px;padding-top:16px;border-top:1px solid #eee"><h3 style="margin:0 0 6px;font-size:16px">Account settings</h3><p class="muted" style="margin:0 0 12px;font-size:13px">Manage your Barchalor account.</p><button id="profileLogoutButton" class="secondary" type="button" style="width:100%;border-color:#f3b9bf;color:#c62835;background:#fff0f1">Log out of Barchalor</button></div></section></div>
+<div id="profileModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="profileModalTitle"><section class="profile-modal"><div class="modal-title"><h2 id="profileModalTitle">My profile</h2><button id="closeProfile" class="icon-close" type="button" aria-label="Close">✕</button></div><div class="profile-modal-tabs" role="tablist" aria-label="Profile menu"><button type="button" id="profileTabButton" class="profile-tab active" role="tab" aria-selected="true">👤 Profile</button><button type="button" id="settingsTabButton" class="profile-tab" role="tab" aria-selected="false">⚙️ Settings</button></div><div id="profileTabContent" class="profile-tab-content"><div class="profile-card"><div id="profileAvatarPreview" class="avatar profile-big">?</div><div><strong id="profilePreviewName">Your name</strong><div id="profilePreviewUsername" class="muted">@username</div><div id="profilePreviewBio" class="bio-text">Add a short bio about yourself.</div></div></div><form id="profileForm" class="profile-form"><label>Profile picture<input id="avatarFile" type="file" accept="image/jpeg,image/png,image/webp,image/gif"></label><div class="muted">JPG, PNG, WEBP or GIF; maximum 5 MB.</div><button id="removeAvatar" class="secondary" type="button">Remove profile picture</button><label>Display name<input id="displayNameInput" maxlength="60" required placeholder="Your display name"></label><label>Username<input id="usernameInput" minlength="3" maxlength="24" pattern="[A-Za-z0-9_]+" required placeholder="letters, numbers and underscore"></label><label>Bio<textarea id="bioInput" maxlength="180" placeholder="Tell people a little about yourself"></textarea></label><div id="profileStatus" class="chat-status" role="status"></div><button id="saveProfile" class="primary" type="submit">Save profile</button></form></div><section id="settingsTabContent" class="profile-tab-content" hidden><h3 class="settings-heading">Settings</h3><p class="muted settings-intro">Manage your Barchalor account and app preferences.</p><div class="settings-row"><div><strong>Signed-in account</strong><p id="settingsEmail" class="muted">Your account email</p></div><span>🔐</span></div><div class="settings-row"><div><strong>Appearance</strong><p class="muted">Light red and white theme</p></div><span class="theme-chip">Light</span></div><div class="settings-row"><div><strong>Private chats</strong><p class="muted">Your conversations are shown in the Private Chat section.</p></div><span>💬</span></div><div class="settings-note">Keep your password private. Barchalor will never ask you to share your password in a chat.</div><button id="settingsDoneButton" class="primary settings-done" type="button">Done</button></section></section></div>
 <script>
 
 // Dedicated private-chat page: feed stays separate from conversations.
 function openPrivateChatPage(){
   document.body.classList.add('chat-page-open');
+  document.getElementById('privateChatNavButton')?.classList.add('active');
+  document.getElementById('feedNavButton')?.classList.remove('active');
   const panel=document.getElementById('chatPanel');
   if(panel) panel.scrollTop=0;
   window.scrollTo({top:0,behavior:'smooth'});
@@ -139,6 +196,8 @@ function openPrivateChatPage(){
 }
 function closePrivateChatPage(){
   document.body.classList.remove('chat-page-open');
+  document.getElementById('privateChatNavButton')?.classList.remove('active');
+  document.getElementById('feedNavButton')?.classList.add('active');
   window.scrollTo({top:0,behavior:'smooth'});
 }
 document.getElementById('headerMessengerButton')?.addEventListener('click',()=>{
@@ -146,6 +205,9 @@ document.getElementById('headerMessengerButton')?.addEventListener('click',()=>{
   else openPrivateChatPage();
 });
 document.getElementById('backToFeedButton')?.addEventListener('click',closePrivateChatPage);
+document.getElementById('privateChatNavButton')?.addEventListener('click',openPrivateChatPage);
+document.getElementById('feedNavButton')?.addEventListener('click',()=>{closePrivateChatPage();window.scrollTo({top:0,behavior:'smooth'});});
+
 
 const SUPABASE_URL='https://vlxmxsghxejvirrcdtdn.supabase.co';
 const SUPABASE_KEY='sb_publishable_JKROndaY1L0GG8xjuBcSjg_xmV8TrNE';
@@ -364,9 +426,23 @@ async function loadActiveMessages(){if(!activeConversationId)return;if(refreshin
 function startMessageRealtime(){if(!activeConversationId)return;const id=activeConversationId;messageChannel=db.channel('messages-'+id+'-'+Date.now()).on('postgres_changes',{event:'INSERT',schema:'public',table:'messages',filter:'conversation_id=eq.'+id},payload=>{if(String(activeConversationId)===String(id))loadActiveMessages()}).subscribe(status=>{if(status==='CHANNEL_ERROR'||status==='TIMED_OUT')console.warn('Message realtime status:',status)})}
 function stopMessageRealtime(){if(messageChannel){db.removeChannel(messageChannel);messageChannel=null}}
 $('chatForm').addEventListener('submit',async event=>{event.preventDefault();if(!currentUser||!activeConversationId)return;const content=$('chatText').value.trim(),file=$('chatImage').files[0];if(!content&&!file){$('chatStatus').textContent='Write a message or select a photo first.';return}const button=$('sendChatButton');button.disabled=true;try{let imageUrl=null;if(file)imageUrl=await uploadImage(file,'messages');const {data:newMessage,error}=await db.from('messages').insert({conversation_id:activeConversationId,sender_id:currentUser.id,content:content||null,image_url:imageUrl}).select('id').single();if(error)throw error;if(newMessage?.id)sendPushForEvent('message',newMessage.id);$('chatText').value='';$('chatImage').value='';$('chatStatus').textContent='Message sent.';await loadActiveMessages();await loadConversations()}catch(error){$('chatStatus').textContent='Message failed: '+error.message}finally{button.disabled=false}});
+// Profile menu tabs: keep Profile and Settings inside the same menu.
+function showProfileMenuTab(tab){
+  const isSettings=tab==='settings';
+  $('profileTabContent').hidden=isSettings;
+  $('settingsTabContent').hidden=!isSettings;
+  $('profileTabButton').classList.toggle('active',!isSettings);
+  $('settingsTabButton').classList.toggle('active',isSettings);
+  $('profileTabButton').setAttribute('aria-selected',String(!isSettings));
+  $('settingsTabButton').setAttribute('aria-selected',String(isSettings));
+  $('profileModalTitle').textContent=isSettings?'Settings':'My profile';
+  if(isSettings) $('settingsEmail').textContent=currentUser?.email||'No account email available';
+}
+$('profileTabButton').addEventListener('click',()=>showProfileMenuTab('profile'));
+$('settingsTabButton').addEventListener('click',()=>showProfileMenuTab('settings'));
+$('settingsDoneButton').addEventListener('click',()=> $('profileModal').classList.remove('open'));
 // Profile editor: profile data is stored in the existing public.profiles table.
-$('profileButton').addEventListener('click',openProfileEditor);
-$('profileLogoutButton').addEventListener('click',async()=>{ $('profileModal').classList.remove('open'); await logout(); });
+$('profileButton').addEventListener('click',()=>{showProfileMenuTab('profile');openProfileEditor()});
 $('closeProfile').addEventListener('click',()=> $('profileModal').classList.remove('open'));
 $('profileModal').addEventListener('click',e=>{if(e.target===$('profileModal'))$('profileModal').classList.remove('open')});
 async function loadMyProfile(){if(!currentUser)return;const {data,error}=await db.from('profiles').select('id,username,display_name,avatar_url,bio').eq('id',currentUser.id).maybeSingle();if(error){console.warn('Profile load:',error.message);return}myProfile=data||{id:currentUser.id,username:'member',display_name:'Member',avatar_url:null,bio:''};$('profileButton').style.display='inline-block';$('profilePreviewName').textContent=myProfile.display_name||myProfile.username;$('profilePreviewUsername').textContent='@'+(myProfile.username||'member');$('profilePreviewBio').textContent=myProfile.bio||'Add a short bio about yourself.';$('profileAvatarPreview').replaceWith(makeAvatar(myProfile,'profile-big'));$('profileAvatarPreview').id='profileAvatarPreview';$('displayNameInput').value=myProfile.display_name||'';$('usernameInput').value=myProfile.username||'';$('bioInput').value=myProfile.bio||''}
