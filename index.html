@@ -195,6 +195,57 @@ header{display:flex;min-height:78px;gap:18px;padding:12px max(18px,calc((100% - 
 @media(max-width:1100px){#app .layout{grid-template-columns:minmax(0,680px);justify-content:center}.left-panel,.right-panel{display:none}}
 @media(max-width:600px){header{min-height:70px;padding:9px 12px;gap:8px}.logo{font-size:22px;gap:7px}.logo:before{width:38px;height:38px;font-size:27px;border-radius:13px}.header-actions{gap:6px}.header-actions button{min-height:39px}.messenger-icon{width:40px;height:40px;min-width:40px}#account{display:none}#enablePushButton{font-size:0;width:39px;padding:0}#enablePushButton:after{content:'🔔';font-size:16px}.notification-button{font-size:0;padding:8px 10px;min-width:39px}.notification-button:first-letter{font-size:17px}.notification-badge{font-size:10px}#profileButton{width:40px;height:40px;min-width:40px}#logout{font-size:12px;padding:8px}#quickChatNav{top:70px;padding:8px 9px;gap:7px}#quickChatNav button{font-size:12px;padding:10px 6px;line-height:1.25}.layout,#app .layout{padding:12px 9px 25px;gap:12px}.composer,.post,#chatPanel{padding:14px;border-radius:17px}.post-head strong{font-size:14px}.post-content{font-size:14px}.post-image{max-height:500px;object-fit:cover}.post-actions button{font-size:12px;padding:9px 4px}.profile-modal{padding:17px;border-radius:20px}.chat-messages{height:280px}}
 
+
+/* Mobile polish: keep the brand, controls and post composer comfortable on small screens */
+:root{--bg:#fff7f8;--red:#ed3655;--line:#f3dfe4}
+body{background:linear-gradient(180deg,#fff 0,#fff7f8 260px,#fff7f8 100%);overflow-x:hidden}
+header{padding:12px clamp(12px,3vw,28px);gap:10px;flex-wrap:wrap;border-bottom:1px solid #f7e1e6}
+.logo{flex:0 1 auto;min-width:0;font-size:clamp(21px,4vw,30px);letter-spacing:-.7px;white-space:nowrap}
+.header-actions{display:flex;align-items:center;gap:8px;max-width:100%}
+#quickChatNav{display:flex;gap:10px;padding:12px clamp(12px,3vw,24px);background:#fff;position:sticky;top:0;z-index:4;border-bottom:1px solid #f5e2e6}
+#quickChatNav button{flex:1;min-width:0;border:1px solid #f2dce2;background:#fff1f3;color:#a91e3b;border-radius:17px;padding:13px 10px;font-weight:750;line-height:1.3}
+#quickChatNav button.active,#feedNavButton.active{background:linear-gradient(120deg,#f64f70,#e91e45);color:#fff;border-color:transparent;box-shadow:0 5px 14px #ed365526}
+.layout{grid-template-columns:minmax(0,1fr);gap:14px;padding:14px clamp(10px,3vw,22px)}
+.left-panel,.right-panel{display:none}
+main{min-width:0;width:100%}
+.composer,.post,#chatPanel,.panel{border:1px solid #f4e1e5;border-radius:20px;box-shadow:0 5px 22px #a91e3b08}
+.composer{padding:clamp(14px,3.5vw,22px);margin-bottom:16px}
+.composer h3{color:#a91e3b;font-size:18px}
+.composer textarea{min-height:92px;resize:none;border:1px solid #f0dfe3;background:#fffafb;border-radius:17px;padding:15px;font-size:16px;line-height:1.5;outline:none}
+.composer textarea:focus,.comment-form input:focus,.chat-search-row input:focus{border-color:#ed7890;box-shadow:0 0 0 3px #ed365515;outline:none}
+.upload-row{display:grid;grid-template-columns:1fr;align-items:start;gap:8px;margin:12px 0 16px}
+.upload-row label{color:#b62242;font-weight:800}
+#postImage{width:100%;min-width:0;font-size:14px;color:#65676b;background:#fff7f8;border:1px dashed #efc9d2;border-radius:12px;padding:10px}
+#postImage::file-selector-button{border:0;border-radius:9px;background:#ffe4ea;color:#a91e3b;font-weight:750;padding:9px 12px;margin-right:10px}
+.composer .primary{width:auto;min-width:150px;float:right;border-radius:14px;padding:13px 20px;background:linear-gradient(120deg,#f64f70,#e91e45);box-shadow:0 6px 15px #ed365526}
+.composer form::after{content:"";display:block;clear:both}
+.post{padding:clamp(13px,3.5vw,20px);margin-bottom:16px}
+.post-image{max-height:none;max-width:100%;object-fit:cover;border-radius:16px}
+.avatar{width:44px;height:44px;background:#ffe2e9}
+#feedStatus{padding:12px;color:#9b6975}
+html{scrollbar-width:none}
+html::-webkit-scrollbar,body::-webkit-scrollbar{width:0;height:0;display:none}
+@media(max-width:600px){
+ header{align-items:center}
+ .logo{font-size:clamp(19px,5.5vw,25px);max-width:100%}
+ .header-actions{width:100%;justify-content:space-between;flex-wrap:nowrap;gap:5px}
+ #account{max-width:23%;font-size:10px}
+ .header-actions button{max-width:100%;min-width:0}
+ #notificationButton{font-size:0;padding:9px 11px}
+ #notificationButton::before{content:"🔔";font-size:18px}
+ #enablePushButton{font-size:11px}
+ #profileButton{font-size:11px;overflow:hidden;text-overflow:ellipsis}
+ #logout{font-size:11px;white-space:nowrap}
+ #quickChatNav button{font-size:13px;padding:12px 7px}
+ .composer textarea{font-size:16px;min-height:88px}
+ .post-actions{justify-content:space-between;gap:4px}
+ .post-actions button{font-size:13px}
+}
+@media(min-width:760px){
+ .layout{grid-template-columns:210px minmax(0,650px) 250px}
+ .left-panel,.right-panel{display:block}
+}
+
 </style>
 </head>
 <body>
